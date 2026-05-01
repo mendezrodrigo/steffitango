@@ -1,593 +1,999 @@
-iimport React, { useState } from "react";
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Steffitango | Tango Argentino in Fürth</title>
+  <meta name="description" content="Steffitango — Tango Argentino Kurse, Milongas, Practica und Festivalito SientoTango in Fürth." />
 
-/**
- * Steffitango 2026 — Copy-pasteable React landing page
- * -----------------------------------------------------
- * No shadcn. No icon libraries. No external UI dependencies.
- * Works well in Vite / React / GitHub Pages.
- *
- * Optional image setup:
- * 1. Put your tango reference images in /public/images/
- * 2. Rename them:
- *    - /public/images/tango-hero.jpg
- *    - /public/images/tango-sketch.jpg
- * 3. The design will use them automatically.
- */
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Parisienne&display=swap" rel="stylesheet">
 
-const email = "st@steffitango.de";
-const facebook = "https://www.facebook.com/";
-const maps = "https://maps.google.com/?q=Kaiserstraße+177,+90763+Fürth";
+  <style>
+    :root {
+      --black: #030303;
+      --soft-black: #0a0a0a;
+      --white: #f8f1e8;
+      --muted: #b9b0a6;
+      --line: rgba(255,255,255,.16);
+      --red: #c41f1a;
+      --dark-red: #76100f;
+    }
 
-const text = {
-  de: {
-    lang: "EN",
-    nav: ["Home", "Veranstaltungen", "Kurse", "Preise", "Über uns", "Location", "Kontakt"],
-    heroSmall: "Tango Argentino in Fürth · 2026",
-    heroTitleA: "Tanz ist",
-    heroTitleB: "Verbindung.",
-    heroBody:
-      "Leidenschaft. Eleganz. Begegnung. Steffitango ist ein weiblich geführter Tango-Ort für Menschen, die Musik, Nähe, Bewegung und Gemeinschaft suchen.",
-    heroCta: "Veranstaltungen ansehen",
-    heroCta2: "Kurse entdecken",
-    quote:
-      "Wo immer Tanzende mit dem Fuß auftreten, da entspringt dem Staub ein Quell des Lebens.",
-    quoteAuthor: "Rumi",
-    pillars: [
-      ["♡", "Leidenschaft", "Wir leben Tango mit Herz, Seele und Humor."],
-      ["◎", "Gemeinschaft", "Tanzen verbindet — auf und neben der Tanzfläche."],
-      ["♢", "Eleganz", "Schönheit, Präzision und Freiheit in jeder Bewegung."],
-      ["⌖", "Fürth", "Mitten in der Region, mitten im Leben."],
-    ],
-    eventsTitle: "Aktuelle Veranstaltungen",
-    allDates: "Alle Termine ansehen",
-    events: [
-      ["Milonga", "Volverás", "Fr 24.04.2026", "20:00 – ca. Mitternacht", "Steffitango, Kaiserstraße 177"],
-      ["Milonga", "Cosa Nuestra", "Fr 15.05.2026", "20:00 – ca. Mitternacht", "Neo · Modern · Freestyle"],
-      ["Practica", "La Lúdica", "So 26.04.2026", "16:00 – 19:00 Uhr", "Offenes Üben & Spielen"],
-      ["Festivalito 2026", "SientoTango", "17. – 19. April 2026", "Workshops · Seminare · Milongas", "Internationale Maestr@s"],
-    ],
-    offerTitle: "Was wir bieten",
-    offers: [
-      ["⚭", "Kurse", "Für Anfänger*innen bis Fortgeschrittene — fortlaufend, herzlich und verständlich.", "Mehr erfahren"],
-      ["♕", "Privatstunden", "Individuell. Persönlich. Auf deine Wünsche abgestimmt.", "Mehr erfahren"],
-      ["▦", "Veranstaltungen", "Milongas, Practicas und Festivals — Tanz, Musik, Begegnung.", "Mehr erfahren"],
-      ["⌖", "Location", "Unser Studio in Fürth — zentral, charmant, einzigartig.", "Mehr erfahren"],
-    ],
-    coursesTitle: "Kurse im Studio",
-    courseIntro:
-      "Unsere Kurse sind fortlaufend. Ihr bucht Zehnerkarten, auf denen eure Teilnahme vermerkt wird. Die Karten sollten innerhalb von 4 Monaten eingelöst werden.",
-    coursePrice: "10 Kursstunden à 75 Minuten + Austanzen · 150 € pro Person",
-    courses: [
-      ["Montag", "19:00 Beautiful Tango Basics · 20:30 The Tango Matrix 2"],
-      ["Dienstag", "19:00 Exploring Tango 1 · 20:30 Exploring Tango 2"],
-      ["Mittwoch", "19:00 Discovering Tango · 20:30 Playing with Tango 1"],
-      ["Donnerstag", "19:00 The Tango Matrix 1 · 20:30 Head over Heels into Tango 2"],
-    ],
-    pricesTitle: "Preise",
-    prices: [
-      ["Kurskarte", "150 €", "10 Kursstunden à 75 Minuten + Austanzen"],
-      ["Milonga / Practica", "12 €", "Studierende 5 €"],
-      ["Festival Workshop", "30 €", "pro Person und Workshop"],
-      ["Festival Seminar", "60 €", "pro Person und Seminar"],
-      ["Privatstunde Festival", "150 €/h", "Sara Grdan & Ivan Terrazas"],
-    ],
-    aboutTitle: "Über Steffitango",
-    aboutText:
-      "Steffitango ist ein weiblich geführter, lebendiger Tango-Raum in Fürth. Hier treffen klassische Tango-Kultur, moderne Offenheit und eine warme Community aufeinander. Das Team um Stefanie Stenzel schafft einen Ort, an dem Menschen Tango nicht nur lernen, sondern erleben: als Gespräch zwischen Körper, Musik, Rollen, Kulturen und Generationen.",
-    team: "Petra · Stefan · Antonia · Steffi",
-    locationTitle: "Location",
-    locationText:
-      "Studio Steffitango · Kaiserstraße 177, 90763 Fürth · Eingang im Innenhof. Schwingbodenparkett, angenehme Belüftung und ein Raum, der für Begegnung gemacht ist.",
-    contactTitle: "Bereit für deine nächste Tango-Runde?",
-    contactText:
-      "Schreib uns eine E-Mail, frag nach Kursen oder komm zur nächsten Milonga. Allein oder zu zweit — Tango beginnt mit einem ersten Schritt.",
-    emailBtn: "E-Mail schreiben",
-    facebookBtn: "Facebook Kontakt",
-    mapsBtn: "Auf Google Maps ansehen",
-  },
-  en: {
-    lang: "DE",
-    nav: ["Home", "Events", "Courses", "Prices", "About", "Location", "Contact"],
-    heroSmall: "Argentine Tango in Fürth · 2026",
-    heroTitleA: "Dance is",
-    heroTitleB: "connection.",
-    heroBody:
-      "Passion. Elegance. Encounter. Steffitango is a female-led tango space for people who seek music, closeness, movement and community.",
-    heroCta: "View events",
-    heroCta2: "Explore courses",
-    quote:
-      "Wherever dancers step with their feet, a spring of life rises from the dust.",
-    quoteAuthor: "Rumi",
-    pillars: [
-      ["♡", "Passion", "We live tango with heart, soul and humor."],
-      ["◎", "Community", "Dance connects — on and beyond the dance floor."],
-      ["♢", "Elegance", "Beauty, precision and freedom in every movement."],
-      ["⌖", "Fürth", "In the heart of the region, in the heart of life."],
-    ],
-    eventsTitle: "Current Events",
-    allDates: "View all dates",
-    events: [
-      ["Milonga", "Volverás", "Fri 24.04.2026", "8:00 pm – around midnight", "Steffitango, Kaiserstraße 177"],
-      ["Milonga", "Cosa Nuestra", "Fri 15.05.2026", "8:00 pm – around midnight", "Neo · Modern · Freestyle"],
-      ["Practica", "La Lúdica", "Sun 26.04.2026", "4:00 pm – 7:00 pm", "Open practice & play"],
-      ["Festivalito 2026", "SientoTango", "April 17–19, 2026", "Workshops · Seminars · Milongas", "International maestros"],
-    ],
-    offerTitle: "What We Offer",
-    offers: [
-      ["⚭", "Courses", "For beginners to advanced dancers — ongoing, warm and clear.", "Learn more"],
-      ["♕", "Private Lessons", "Individual. Personal. Focused on your wishes.", "Learn more"],
-      ["▦", "Events", "Milongas, practicas and festivals — dance, music, connection.", "Learn more"],
-      ["⌖", "Location", "Our studio in Fürth — central, charming, unique.", "Learn more"],
-    ],
-    coursesTitle: "Studio Courses",
-    courseIntro:
-      "Our courses are ongoing. You book 10-class cards, where each participation is marked. Cards should be used within 4 months.",
-    coursePrice: "10 lessons of 75 minutes + social dancing · €150 per person",
-    courses: [
-      ["Monday", "19:00 Beautiful Tango Basics · 20:30 The Tango Matrix 2"],
-      ["Tuesday", "19:00 Exploring Tango 1 · 20:30 Exploring Tango 2"],
-      ["Wednesday", "19:00 Discovering Tango · 20:30 Playing with Tango 1"],
-      ["Thursday", "19:00 The Tango Matrix 1 · 20:30 Head over Heels into Tango 2"],
-    ],
-    pricesTitle: "Prices",
-    prices: [
-      ["Course card", "€150", "10 lessons of 75 minutes + social dancing"],
-      ["Milonga / Practica", "€12", "students €5"],
-      ["Festival Workshop", "€30", "per person and workshop"],
-      ["Festival Seminar", "€60", "per person and seminar"],
-      ["Festival Private Lesson", "€150/h", "Sara Grdan & Ivan Terrazas"],
-    ],
-    aboutTitle: "About Steffitango",
-    aboutText:
-      "Steffitango is a female-led, vibrant tango space in Fürth. Classic tango culture, modern openness and a warm community meet here. The team around Stefanie Stenzel creates a place where people do not only learn tango, but experience it: as a conversation between body, music, roles, cultures and generations.",
-    team: "Petra · Stefan · Antonia · Steffi",
-    locationTitle: "Location",
-    locationText:
-      "Studio Steffitango · Kaiserstraße 177, 90763 Fürth · entrance through the courtyard. Sprung dance floor, comfortable ventilation and a room made for connection.",
-    contactTitle: "Ready for your next tango round?",
-    contactText:
-      "Send us an email, ask about courses or join the next milonga. Solo or with a partner — tango begins with one first step.",
-    emailBtn: "Send email",
-    facebookBtn: "Facebook contact",
-    mapsBtn: "Open Google Maps",
-  },
-};
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: #000;
+      color: var(--white);
+      font-family: Inter, system-ui, sans-serif;
+    }
 
-export default function SteffiTangoLandingPage() {
-  const [lang, setLang] = useState("de");
-  const t = text[lang];
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background:
+        radial-gradient(circle at 18% 8%, rgba(196,31,26,.18), transparent 32%),
+        radial-gradient(circle at 82% 5%, rgba(255,255,255,.08), transparent 26%),
+        linear-gradient(180deg, #000 0%, #090909 48%, #020202 100%);
+    }
 
-  const navTargets = ["home", "events", "courses", "prices", "about", "location", "contact"];
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: .045;
+      background-image:
+        linear-gradient(to right, #fff 1px, transparent 1px),
+        linear-gradient(to bottom, #fff 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
 
-  return (
-    <div className="steffi-page">
-      <style>{css}</style>
+    a { color: inherit; }
 
-      <header className="topbar">
-        <a className="logo" href="#home" aria-label="Steffitango Home">
-          <span className="logo-script">Steffi<span>Tango</span></span>
-          <span className="logo-sub">Tango Argentino</span>
-        </a>
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      min-height: 92px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      padding: 18px 5vw;
+      background: rgba(0,0,0,.78);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(18px);
+    }
 
-        <nav className="nav">
-          {t.nav.map((item, i) => (
-            <a key={item} href={`#${navTargets[i]}`}>{item}</a>
-          ))}
-        </nav>
+    .logo {
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      min-width: 215px;
+    }
 
-        <div className="actions">
-          <button className="lang" onClick={() => setLang(lang === "de" ? "en" : "de")}>DE <span>|</span> EN</button>
-          <a className="circle" href={`mailto:${email}`} aria-label="Email">✉</a>
-          <a className="circle" href={facebook} target="_blank" rel="noreferrer" aria-label="Facebook">f</a>
-        </div>
-      </header>
+    .logo-main {
+      font-family: Parisienne, cursive;
+      font-size: 46px;
+      line-height: .82;
+      color: var(--white);
+    }
 
-      <main>
-        <section id="home" className="hero section-dark">
-          <div className="hero-copy">
-            <p className="eyebrow">{t.heroSmall}</p>
-            <h1><span>{t.heroTitleA}</span><em>{t.heroTitleB}</em></h1>
-            <div className="ornament"><span></span>◆<span></span></div>
-            <p className="hero-body">{t.heroBody}</p>
-            <div className="hero-buttons">
-              <a className="btn primary" href="#events">{t.heroCta} ›</a>
-              <a className="btn ghost" href="#courses">{t.heroCta2}</a>
-            </div>
-          </div>
+    .logo-main span { color: var(--red); }
 
-          <div className="hero-art" aria-label="Black and white tango dancers visual">
-            <div className="photo photo-main"></div>
-            <div className="spotlight"></div>
-          </div>
+    .logo-sub {
+      margin-left: 42px;
+      margin-top: 6px;
+      font-size: 11px;
+      letter-spacing: .34em;
+      text-transform: uppercase;
+      color: var(--white);
+    }
 
-          <aside className="quote-card">
-            <div className="quote-mark">“</div>
-            <p>{t.quote}</p>
-            <span>— {t.quoteAuthor}</span>
-          </aside>
-        </section>
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
 
-        <section className="pillars">
-          {t.pillars.map(([icon, title, body]) => (
-            <article className="pillar" key={title}>
-              <div className="pillar-icon">{icon}</div>
-              <div>
-                <h3>{title}</h3>
-                <p>{body}</p>
-              </div>
-            </article>
-          ))}
-        </section>
+    .nav a {
+      position: relative;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      color: rgba(248,241,232,.9);
+    }
 
-        <section id="events" className="section events">
-          <div className="section-heading split">
-            <div>
-              <p className="mini">2026</p>
-              <h2>{t.eventsTitle}</h2>
-            </div>
-            <a href="#contact" className="link-red">{t.allDates} ›</a>
-          </div>
+    .nav a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -13px;
+      width: 0;
+      height: 2px;
+      background: var(--red);
+      transition: .25s ease;
+    }
 
-          <div className="event-grid">
-            {t.events.map(([type, name, date, time, place], i) => (
-              <article className={`event-card event-${i + 1}`} key={name}>
-                <div className="event-image"></div>
-                <span className="event-type">{type}</span>
-                <div className="event-content">
-                  <h3>{name}</h3>
-                  <strong>{date}</strong>
-                  <p>{time}</p>
-                  <p>{place}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
+    .nav a:hover::after { width: 100%; }
 
-        <section className="section offer">
-          <div className="section-heading">
-            <p className="mini">Steffitango</p>
-            <h2>{t.offerTitle}</h2>
-          </div>
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-          <div className="offer-layout">
-            <div className="offer-grid">
-              {t.offers.map(([icon, title, body, link]) => (
-                <article className="offer-card" key={title}>
-                  <div className="offer-icon">{icon}</div>
-                  <h3>{title}</h3>
-                  <p>{body}</p>
-                  <a href={title.includes("Location") || title.includes("Ort") ? "#location" : title.includes("Kurse") || title.includes("Courses") ? "#courses" : "#contact"}>{link} ›</a>
-                </article>
-              ))}
-            </div>
-            <div className="sketch-panel">
-              <div className="sketch-image"></div>
-            </div>
-          </div>
-        </section>
+    .lang-toggle {
+      cursor: pointer;
+      border: 0;
+      background: transparent;
+      color: var(--white);
+      font-size: 14px;
+      letter-spacing: .12em;
+      font-weight: 700;
+    }
 
-        <section id="courses" className="section courses">
-          <div className="section-heading centered">
-            <p className="mini">Unterricht / Classes</p>
-            <h2>{t.coursesTitle}</h2>
-            <p>{t.courseIntro}</p>
-            <strong>{t.coursePrice}</strong>
-          </div>
+    .lang-toggle span:first-child { color: var(--red); }
+    .lang-toggle .divider { color: rgba(255,255,255,.45); padding: 0 6px; }
 
-          <div className="course-grid">
-            {t.courses.map(([day, info]) => (
-              <article className="course-card" key={day}>
-                <h3>{day}</h3>
-                <p>{info}</p>
-              </article>
-            ))}
-          </div>
-        </section>
+    .circle {
+      width: 38px;
+      height: 38px;
+      border: 1px solid rgba(255,255,255,.8);
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      text-decoration: none;
+      font-weight: 800;
+      transition: .22s ease;
+    }
 
-        <section id="prices" className="section prices">
-          <div className="section-heading split">
-            <div>
-              <p className="mini">Transparent</p>
-              <h2>{t.pricesTitle}</h2>
-            </div>
-          </div>
-          <div className="price-table">
-            {t.prices.map(([name, price, note]) => (
-              <div className="price-row" key={name}>
-                <span>{name}</span>
-                <strong>{price}</strong>
-                <p>{note}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+    .circle:hover {
+      background: var(--red);
+      border-color: var(--red);
+    }
 
-        <section id="about" className="section about">
-          <div className="about-card">
-            <p className="mini">Female-owned · Community-led</p>
-            <h2>{t.aboutTitle}</h2>
-            <p>{t.aboutText}</p>
-            <strong>{t.team}</strong>
-          </div>
-        </section>
+    .section { padding: 76px 5vw; border-bottom: 1px solid var(--line); }
 
-        <section id="location" className="section location">
-          <div>
-            <p className="mini">Fürth</p>
-            <h2>{t.locationTitle}</h2>
-            <p>{t.locationText}</p>
-            <a className="btn primary" href={maps} target="_blank" rel="noreferrer">{t.mapsBtn}</a>
-          </div>
-          <div className="map-card">
-            <span>Kaiserstraße 177</span>
-            <strong>90763 Fürth</strong>
-            <p>Eingang im Innenhof</p>
-          </div>
-        </section>
+    .hero {
+      min-height: calc(100vh - 92px);
+      display: grid;
+      grid-template-columns: 1fr 1.05fr .72fr;
+      align-items: center;
+      gap: 44px;
+      padding: 58px 5vw 70px;
+      border-bottom: 1px solid var(--line);
+    }
 
-        <section id="contact" className="contact-section">
-          <p className="signature">¡Viva el Tango!</p>
-          <h2>{t.contactTitle}</h2>
-          <p>{t.contactText}</p>
-          <div className="contact-buttons">
-            <a className="btn light" href={`mailto:${email}`}>{t.emailBtn}</a>
-            <a className="btn ghost" href={facebook} target="_blank" rel="noreferrer">{t.facebookBtn}</a>
-          </div>
-        </section>
-      </main>
+    .eyebrow, .mini {
+      color: var(--red);
+      text-transform: uppercase;
+      letter-spacing: .24em;
+      font-size: 12px;
+      font-weight: 800;
+    }
 
-      <footer>
-        <span>Steffitango · Kaiserstraße 177 · 90763 Fürth</span>
-        <span>© 2026 Steffitango</span>
-      </footer>
+    .hero h1 {
+      margin: 0;
+      font-family: Cormorant Garamond, serif;
+      font-size: clamp(64px, 8vw, 118px);
+      line-height: .78;
+      letter-spacing: -.055em;
+      font-weight: 600;
+    }
+
+    .hero h1 span { display: block; }
+
+    .hero h1 em {
+      display: block;
+      margin-top: 8px;
+      font-family: Parisienne, cursive;
+      color: var(--red);
+      font-size: 1.04em;
+      font-style: normal;
+      font-weight: 400;
+      letter-spacing: -.02em;
+    }
+
+    .ornament {
+      margin: 26px 0;
+      display: flex;
+      align-items: center;
+      color: var(--red);
+      gap: 12px;
+      max-width: 370px;
+    }
+
+    .ornament span {
+      height: 1px;
+      flex: 1;
+      background: var(--line);
+    }
+
+    .hero-body {
+      max-width: 545px;
+      color: #ded8d0;
+      font-size: 18px;
+      line-height: 1.8;
+    }
+
+    .hero-buttons, .contact-buttons {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 32px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 0 24px;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 13px;
+      letter-spacing: .09em;
+      font-weight: 900;
+      transition: .22s ease;
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, var(--red), var(--dark-red));
+      color: white;
+      box-shadow: 0 18px 40px rgba(196,31,26,.24);
+    }
+
+    .btn.primary:hover { transform: translateY(-2px); filter: brightness(1.08); }
+
+    .btn.ghost {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color: var(--white);
+    }
+
+    .btn.light { background: var(--white); color: #050505; }
+
+    .hero-art {
+      position: relative;
+      min-height: 620px;
+      overflow: hidden;
+    }
+
+    .hero-photo {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,.92) 0%, rgba(0,0,0,.18) 30%, rgba(0,0,0,.2) 62%, rgba(0,0,0,.92) 100%),
+        linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.94)),
+        url('https://images.unsplash.com/photo-1545959570-a94084071b5d?auto=format&fit=crop&w=1200&q=80');
+      background-size: cover;
+      background-position: center;
+      filter: grayscale(1) contrast(1.25) brightness(.72);
+    }
+
+    .hero-photo::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 52% 42%, transparent 0 20%, rgba(0,0,0,.25) 42%, rgba(0,0,0,.92) 100%),
+        linear-gradient(110deg, transparent 0 48%, rgba(196,31,26,.14) 50%, transparent 68%);
+    }
+
+    .hero-figures {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+    }
+
+    .couple {
+      position: relative;
+      width: min(410px, 86%);
+      height: 560px;
+      filter: drop-shadow(0 30px 40px rgba(0,0,0,.75));
+    }
+
+    .man, .woman { position: absolute; bottom: 0; }
+    .man { left: 42%; width: 150px; height: 485px; transform: rotate(-3deg); }
+    .woman { left: 12%; width: 210px; height: 500px; transform: rotate(4deg); }
+
+    .head {
+      position: absolute;
+      top: 0;
+      width: 48px;
+      height: 55px;
+      border-radius: 50%;
+      background: #ddd;
+    }
+
+    .man .head { left: 48px; }
+    .woman .head { left: 84px; top: 10px; }
+
+    .torso {
+      position: absolute;
+      top: 52px;
+      background: linear-gradient(135deg, #ececec, #777);
+    }
+
+    .man .torso {
+      left: 38px;
+      width: 80px;
+      height: 175px;
+      transform: skew(-5deg);
+      border-radius: 35px 35px 18px 18px;
+    }
+
+    .woman .torso {
+      left: 58px;
+      width: 92px;
+      height: 145px;
+      background: linear-gradient(135deg, #d8d8d8, #8a8a8a);
+      border-radius: 45px 45px 16px 16px;
+    }
+
+    .dress {
+      position: absolute;
+      left: 30px;
+      top: 166px;
+      width: 148px;
+      height: 220px;
+      background:
+        linear-gradient(135deg, rgba(196,31,26,.7), rgba(255,255,255,.28)),
+        repeating-linear-gradient(65deg, rgba(0,0,0,.42) 0 4px, transparent 4px 18px);
+      clip-path: polygon(25% 0, 75% 0, 100% 100%, 0 100%);
+      filter: grayscale(.15);
+    }
+
+    .arm, .leg {
+      position: absolute;
+      background: #d6d6d6;
+      border-radius: 999px;
+      transform-origin: top;
+    }
+
+    .woman .arm.one { left: 0; top: 92px; width: 130px; height: 14px; transform: rotate(-20deg); }
+    .woman .arm.two { left: 138px; top: 80px; width: 128px; height: 14px; transform: rotate(-38deg); }
+    .man .arm.one { left: -66px; top: 108px; width: 126px; height: 15px; transform: rotate(16deg); }
+    .man .arm.two { left: 88px; top: 78px; width: 130px; height: 15px; transform: rotate(-36deg); }
+    .woman .leg.one { left: 72px; top: 352px; width: 17px; height: 145px; transform: rotate(8deg); }
+    .woman .leg.two { left: 122px; top: 350px; width: 17px; height: 158px; transform: rotate(-18deg); }
+    .man .leg.one { left: 52px; top: 220px; width: 18px; height: 258px; transform: rotate(7deg); background: #333; }
+    .man .leg.two { left: 96px; top: 220px; width: 18px; height: 260px; transform: rotate(-15deg); background: #222; }
+
+    .shoe {
+      position: absolute;
+      width: 58px;
+      height: 13px;
+      background: #f2f2f2;
+      bottom: 0;
+      border-radius: 999px;
+    }
+    .woman .shoe.one { left: 54px; transform: rotate(8deg); }
+    .woman .shoe.two { left: 124px; transform: rotate(-8deg); }
+    .man .shoe.one { left: 24px; background: #111; }
+    .man .shoe.two { left: 82px; background: #111; }
+
+    .quote-card {
+      max-width: 330px;
+      padding-left: 28px;
+      border-left: 1px solid rgba(196,31,26,.55);
+    }
+
+    .quote-mark {
+      font-family: Cormorant Garamond, serif;
+      color: var(--red);
+      font-size: 76px;
+      line-height: .45;
+    }
+
+    .quote-card p {
+      font-size: 18px;
+      line-height: 1.8;
+    }
+
+    .quote-card span {
+      color: var(--red);
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      font-family: Cormorant Garamond, serif;
+      font-size: 18px;
+    }
+
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 30px 5vw;
+      border-bottom: 1px solid var(--line);
+      background: rgba(0,0,0,.55);
+    }
+
+    .pillar {
+      display: flex;
+      gap: 18px;
+      padding: 0 28px;
+      border-right: 1px solid var(--line);
+    }
+
+    .pillar:last-child { border-right: 0; }
+
+    .pillar-icon {
+      color: var(--red);
+      font-size: 44px;
+      line-height: 1;
+      font-family: Cormorant Garamond, serif;
+    }
+
+    .pillar h3 {
+      margin: 0 0 8px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-family: Cormorant Garamond, serif;
+      font-size: 20px;
+    }
+
+    .pillar p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .section-heading { margin-bottom: 34px; }
+    .section-heading.split {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .section-heading.centered {
+      max-width: 850px;
+      margin: 0 auto 40px;
+      text-align: center;
+    }
+
+    h2 {
+      margin: 0;
+      font-family: Cormorant Garamond, serif;
+      font-size: clamp(42px, 5vw, 66px);
+      line-height: .94;
+      font-weight: 600;
+      letter-spacing: -.04em;
+    }
+
+    .section-heading p:not(.mini), .about-card p, .location-copy p, .contact p {
+      color: var(--muted);
+      line-height: 1.85;
+      font-size: 16px;
+    }
+
+    .section-heading strong {
+      display: inline-block;
+      margin-top: 16px;
+      color: var(--red);
+    }
+
+    .link-red {
+      color: var(--red);
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 13px;
+      letter-spacing: .12em;
+      font-weight: 900;
+    }
+
+    .event-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 22px;
+    }
+
+    .event-card {
+      min-height: 340px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.25);
+      background: #080808;
+      transition: .25s ease;
+    }
+
+    .event-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(196,31,26,.78);
+    }
+
+    .event-image {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(0,0,0,.08), rgba(0,0,0,.9)),
+        radial-gradient(circle at 50% 35%, rgba(255,255,255,.2), transparent 26%),
+        linear-gradient(135deg, #151515, #000);
+      filter: grayscale(1) contrast(1.2);
+    }
+
+    .event-card:nth-child(2) .event-image {
+      background:
+        linear-gradient(rgba(0,0,0,.12), rgba(0,0,0,.9)),
+        radial-gradient(circle at 55% 34%, rgba(255,255,255,.22), transparent 24%),
+        linear-gradient(135deg, #1a1a1a, #000);
+    }
+
+    .event-card:nth-child(3) .event-image {
+      background:
+        linear-gradient(rgba(0,0,0,.18), rgba(0,0,0,.9)),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.09) 0 2px, transparent 2px 18px),
+        linear-gradient(135deg, #1a1a1a, #000);
+    }
+
+    .event-card:nth-child(4) .event-image {
+      background:
+        linear-gradient(rgba(255,255,255,.68), rgba(0,0,0,.82)),
+        radial-gradient(circle at 54% 35%, rgba(255,255,255,.68), transparent 22%),
+        linear-gradient(135deg, #eee, #111);
+    }
+
+    .event-type {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: var(--red);
+      padding: 8px 14px;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: .1em;
+      font-weight: 900;
+    }
+
+    .event-content {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .event-content h3 {
+      font-family: Parisienne, cursive;
+      color: var(--white);
+      font-size: 54px;
+      line-height: .82;
+      margin: 0 0 18px;
+      font-weight: 400;
+    }
+
+    .event-content strong {
+      color: var(--red);
+      font-size: 20px;
+    }
+
+    .event-content p {
+      margin: 7px 0 0;
+      color: var(--white);
+      font-size: 14px;
+    }
+
+    .offer-layout {
+      display: grid;
+      grid-template-columns: 1.55fr .8fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .offer-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.035);
+    }
+
+    .offer-card {
+      padding: 32px 22px;
+      border-right: 1px solid var(--line);
+      min-height: 260px;
+    }
+
+    .offer-card:last-child { border-right: 0; }
+
+    .offer-icon {
+      color: var(--red);
+      font-size: 42px;
+      margin-bottom: 20px;
+      font-family: Cormorant Garamond, serif;
+    }
+
+    .offer-card h3 {
+      font-family: Cormorant Garamond, serif;
+      font-size: 26px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin: 0 0 12px;
+    }
+
+    .offer-card p {
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    .offer-card a {
+      color: var(--red);
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: .12em;
+      font-weight: 900;
+    }
+
+    .sketch-panel {
+      min-height: 360px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(90deg, rgba(0,0,0,.96), rgba(0,0,0,.2)),
+        radial-gradient(circle at 70% 45%, rgba(255,255,255,.45), transparent 28%),
+        linear-gradient(135deg, #eee, #111);
+    }
+
+    .sketch-panel::before {
+      content: "";
+      position: absolute;
+      right: 7%;
+      bottom: 4%;
+      width: 260px;
+      height: 320px;
+      background:
+        radial-gradient(ellipse at 40% 10%, #111 0 8%, transparent 9%),
+        radial-gradient(ellipse at 62% 10%, #111 0 8%, transparent 9%),
+        linear-gradient(70deg, transparent 0 42%, #222 43% 47%, transparent 48% 100%),
+        linear-gradient(110deg, transparent 0 54%, #222 55% 59%, transparent 60% 100%),
+        radial-gradient(ellipse at 50% 45%, transparent 0 28%, #222 29% 30%, transparent 31%),
+        repeating-linear-gradient(75deg, transparent 0 10px, rgba(0,0,0,.35) 10px 12px);
+      opacity: .75;
+      filter: grayscale(1);
+    }
+
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .course-card, .about-card, .map-card, .price-table {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.045);
+      backdrop-filter: blur(10px);
+    }
+
+    .course-card {
+      min-height: 190px;
+      padding: 28px;
+    }
+
+    .course-card h3 {
+      margin: 0 0 14px;
+      font-family: Cormorant Garamond, serif;
+      font-size: 34px;
+      color: var(--red);
+    }
+
+    .course-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .price-table { max-width: 1100px; }
+
+    .price-row {
+      display: grid;
+      grid-template-columns: 1fr .4fr 1.3fr;
+      gap: 22px;
+      align-items: center;
+      padding: 22px 26px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .price-row:last-child { border-bottom: 0; }
+    .price-row span { font-family: Cormorant Garamond, serif; font-size: 26px; }
+    .price-row strong { color: var(--red); font-size: 22px; }
+    .price-row p { color: var(--muted); margin: 0; }
+
+    .about-card {
+      max-width: 980px;
+      padding: 46px;
+      background: linear-gradient(135deg, rgba(196,31,26,.14), rgba(255,255,255,.04));
+    }
+
+    .about-card strong {
+      color: var(--red);
+      font-family: Parisienne, cursive;
+      font-size: 36px;
+      font-weight: 400;
+    }
+
+    .location {
+      display: grid;
+      grid-template-columns: 1.1fr .8fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .map-card {
+      min-height: 310px;
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      padding: 36px;
+      background:
+        linear-gradient(135deg, rgba(0,0,0,.72), rgba(196,31,26,.28)),
+        repeating-linear-gradient(45deg, rgba(255,255,255,.08) 0 1px, transparent 1px 12px);
+    }
+
+    .map-card span {
+      color: var(--red);
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      font-weight: 900;
+    }
+
+    .map-card strong {
+      margin-top: 10px;
+      font-family: Cormorant Garamond, serif;
+      font-size: 48px;
+    }
+
+    .contact {
+      padding: 86px 5vw;
+      text-align: center;
+      background: radial-gradient(circle at 50% 0%, rgba(196,31,26,.3), transparent 35%), #070707;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .signature {
+      margin: 0 0 14px;
+      font-family: Parisienne, cursive;
+      color: var(--white) !important;
+      font-size: 46px !important;
+    }
+
+    .contact h2 {
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    .contact p:not(.signature) {
+      max-width: 720px;
+      margin: 22px auto 0;
+    }
+
+    .contact-buttons { justify-content: center; }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 26px 5vw;
+      color: #777;
+      font-size: 13px;
+      background: #020202;
+    }
+
+    [data-lang="en"] { display: none; }
+    body.english [data-lang="de"] { display: none; }
+    body.english [data-lang="en"] { display: initial; }
+    body.english .lang-toggle span:first-child { color: var(--white); }
+    body.english .lang-toggle span:last-child { color: var(--red); }
+
+    @media (max-width: 1180px) {
+      .nav { display: none; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-art { min-height: 520px; order: -1; }
+      .quote-card { max-width: 720px; }
+      .pillars, .event-grid, .course-grid { grid-template-columns: repeat(2, 1fr); }
+      .offer-layout, .location { grid-template-columns: 1fr; }
+      .offer-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 720px) {
+      .topbar { align-items: flex-start; }
+      .logo-main { font-size: 36px; }
+      .logo-sub { font-size: 9px; margin-left: 28px; }
+      .actions .circle { display: none; }
+      .hero { padding-top: 34px; }
+      .hero-art { min-height: 430px; }
+      .pillars, .event-grid, .course-grid, .offer-grid { grid-template-columns: 1fr; }
+      .pillar, .offer-card { border-right: 0; border-bottom: 1px solid var(--line); }
+      .pillar:last-child, .offer-card:last-child { border-bottom: 0; }
+      .section-heading.split { display: block; }
+      .price-row { grid-template-columns: 1fr; gap: 6px; }
+      footer { flex-direction: column; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <a class="logo" href="#home">
+      <span class="logo-main">Steffi<span>Tango</span></span>
+      <span class="logo-sub">Tango Argentino</span>
+    </a>
+
+    <nav class="nav">
+      <a href="#home"><span data-lang="de">Home</span><span data-lang="en">Home</span></a>
+      <a href="#events"><span data-lang="de">Veranstaltungen</span><span data-lang="en">Events</span></a>
+      <a href="#courses"><span data-lang="de">Kurse</span><span data-lang="en">Courses</span></a>
+      <a href="#prices"><span data-lang="de">Preise</span><span data-lang="en">Prices</span></a>
+      <a href="#about"><span data-lang="de">Über uns</span><span data-lang="en">About</span></a>
+      <a href="#location"><span data-lang="de">Location</span><span data-lang="en">Location</span></a>
+      <a href="#contact"><span data-lang="de">Kontakt</span><span data-lang="en">Contact</span></a>
+    </nav>
+
+    <div class="actions">
+      <button class="lang-toggle" onclick="toggleLanguage()"><span>DE</span><span class="divider">|</span><span>EN</span></button>
+      <a class="circle" href="mailto:st@steffitango.de">✉</a>
+      <a class="circle" href="https://www.facebook.com/" target="_blank" rel="noreferrer">f</a>
     </div>
-  );
-}
+  </header>
 
-const css = `
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Parisienne&display=swap');
+  <main>
+    <section id="home" class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow"><span data-lang="de">Tango Argentino in Fürth · 2026</span><span data-lang="en">Argentine Tango in Fürth · 2026</span></p>
+        <h1>
+          <span data-lang="de">Tanz ist</span><span data-lang="en">Dance is</span>
+          <em data-lang="de">Verbindung.</em><em data-lang="en">connection.</em>
+        </h1>
+        <div class="ornament"><span></span>◆<span></span></div>
+        <p class="hero-body">
+          <span data-lang="de">Leidenschaft. Eleganz. Begegnung. Steffitango ist ein weiblich geführter Tango-Ort für Menschen, die Musik, Nähe, Bewegung und Gemeinschaft suchen.</span>
+          <span data-lang="en">Passion. Elegance. Encounter. Steffitango is a female-led tango space for people who seek music, closeness, movement and community.</span>
+        </p>
+        <div class="hero-buttons">
+          <a class="btn primary" href="#events"><span data-lang="de">Veranstaltungen ansehen ›</span><span data-lang="en">View events ›</span></a>
+          <a class="btn ghost" href="#courses"><span data-lang="de">Kurse entdecken</span><span data-lang="en">Explore courses</span></a>
+        </div>
+      </div>
 
-:root {
-  --black: #030303;
-  --black2: #090909;
-  --white: #f7f1e8;
-  --muted: #b8b0a8;
-  --line: rgba(255,255,255,.16);
-  --red: #c51f1a;
-  --red2: #7f1110;
-}
+      <div class="hero-art">
+        <div class="hero-photo"></div>
+        <div class="hero-figures">
+          <div class="couple">
+            <div class="woman">
+              <div class="head"></div><div class="torso"></div><div class="dress"></div>
+              <div class="arm one"></div><div class="arm two"></div>
+              <div class="leg one"></div><div class="leg two"></div>
+              <div class="shoe one"></div><div class="shoe two"></div>
+            </div>
+            <div class="man">
+              <div class="head"></div><div class="torso"></div>
+              <div class="arm one"></div><div class="arm two"></div>
+              <div class="leg one"></div><div class="leg two"></div>
+              <div class="shoe one"></div><div class="shoe two"></div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body { margin: 0; }
+      <aside class="quote-card">
+        <div class="quote-mark">“</div>
+        <p><span data-lang="de">Wo immer Tanzende mit dem Fuß auftreten, da entspringt dem Staub ein Quell des Lebens.</span><span data-lang="en">Wherever dancers step with their feet, a spring of life rises from the dust.</span></p>
+        <span>— Rumi</span>
+      </aside>
+    </section>
 
-.steffi-page {
-  min-height: 100vh;
-  background:
-    radial-gradient(circle at 18% 8%, rgba(197, 31, 26, .18), transparent 32%),
-    radial-gradient(circle at 82% 5%, rgba(255, 255, 255, .07), transparent 26%),
-    linear-gradient(180deg, #000 0%, #080808 44%, #020202 100%);
-  color: var(--white);
-  font-family: Inter, system-ui, sans-serif;
-  overflow-x: hidden;
-}
+    <section class="pillars">
+      <article class="pillar"><div class="pillar-icon">♡</div><div><h3><span data-lang="de">Leidenschaft</span><span data-lang="en">Passion</span></h3><p><span data-lang="de">Wir leben Tango mit Herz, Seele und Humor.</span><span data-lang="en">We live tango with heart, soul and humor.</span></p></div></article>
+      <article class="pillar"><div class="pillar-icon">◎</div><div><h3><span data-lang="de">Gemeinschaft</span><span data-lang="en">Community</span></h3><p><span data-lang="de">Tanzen verbindet — auf und neben der Tanzfläche.</span><span data-lang="en">Dance connects — on and beyond the dance floor.</span></p></div></article>
+      <article class="pillar"><div class="pillar-icon">♢</div><div><h3><span data-lang="de">Eleganz</span><span data-lang="en">Elegance</span></h3><p><span data-lang="de">Schönheit, Präzision und Freiheit in jeder Bewegung.</span><span data-lang="en">Beauty, precision and freedom in every movement.</span></p></div></article>
+      <article class="pillar"><div class="pillar-icon">⌖</div><div><h3>Fürth</h3><p><span data-lang="de">Mitten in der Region, mitten im Leben.</span><span data-lang="en">In the heart of the region, in the heart of life.</span></p></div></article>
+    </section>
 
-.steffi-page::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: .055;
-  background-image: linear-gradient(to right, #fff 1px, transparent 1px), linear-gradient(to bottom, #fff 1px, transparent 1px);
-  background-size: 48px 48px;
-  z-index: 0;
-}
+    <section id="events" class="section events">
+      <div class="section-heading split">
+        <div><p class="mini">2026</p><h2><span data-lang="de">Aktuelle Veranstaltungen</span><span data-lang="en">Current Events</span></h2></div>
+        <a href="#contact" class="link-red"><span data-lang="de">Alle Termine ansehen ›</span><span data-lang="en">View all dates ›</span></a>
+      </div>
+      <div class="event-grid">
+        <article class="event-card"><div class="event-image"></div><span class="event-type">Milonga</span><div class="event-content"><h3>Volverás</h3><strong>Fr 24.04.2026</strong><p>20:00 – ca. Mitternacht</p><p>Steffitango, Kaiserstraße 177</p></div></article>
+        <article class="event-card"><div class="event-image"></div><span class="event-type">Milonga</span><div class="event-content"><h3>Cosa Nuestra</h3><strong>Fr 15.05.2026</strong><p>20:00 – ca. Mitternacht</p><p>Neo · Modern · Freestyle</p></div></article>
+        <article class="event-card"><div class="event-image"></div><span class="event-type">Practica</span><div class="event-content"><h3>La Lúdica</h3><strong>So 26.04.2026</strong><p>16:00 – 19:00 Uhr</p><p><span data-lang="de">Offenes Üben & Spielen</span><span data-lang="en">Open practice & play</span></p></div></article>
+        <article class="event-card"><div class="event-image"></div><span class="event-type">Festivalito 2026</span><div class="event-content"><h3>SientoTango</h3><strong>17. – 19. April 2026</strong><p>Workshops · Seminare · Milongas</p><p><span data-lang="de">Internationale Maestr@s</span><span data-lang="en">International maestros</span></p></div></article>
+      </div>
+    </section>
 
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  height: 92px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 5vw;
-  border-bottom: 1px solid var(--line);
-  background: rgba(0,0,0,.76);
-  backdrop-filter: blur(18px);
-}
+    <section class="section offer">
+      <div class="section-heading"><p class="mini">Steffitango</p><h2><span data-lang="de">Was wir bieten</span><span data-lang="en">What We Offer</span></h2></div>
+      <div class="offer-layout">
+        <div class="offer-grid">
+          <article class="offer-card"><div class="offer-icon">⚭</div><h3><span data-lang="de">Kurse</span><span data-lang="en">Courses</span></h3><p><span data-lang="de">Für Anfänger*innen bis Fortgeschrittene — fortlaufend, herzlich und verständlich.</span><span data-lang="en">For beginners to advanced dancers — ongoing, warm and clear.</span></p><a href="#courses"><span data-lang="de">Mehr erfahren ›</span><span data-lang="en">Learn more ›</span></a></article>
+          <article class="offer-card"><div class="offer-icon">♕</div><h3><span data-lang="de">Privatstunden</span><span data-lang="en">Private Lessons</span></h3><p><span data-lang="de">Individuell. Persönlich. Auf deine Wünsche abgestimmt.</span><span data-lang="en">Individual. Personal. Focused on your wishes.</span></p><a href="#contact"><span data-lang="de">Mehr erfahren ›</span><span data-lang="en">Learn more ›</span></a></article>
+          <article class="offer-card"><div class="offer-icon">▦</div><h3><span data-lang="de">Veranstaltungen</span><span data-lang="en">Events</span></h3><p><span data-lang="de">Milongas, Practicas und Festivals — Tanz, Musik, Begegnung.</span><span data-lang="en">Milongas, practicas and festivals — dance, music, connection.</span></p><a href="#events"><span data-lang="de">Mehr erfahren ›</span><span data-lang="en">Learn more ›</span></a></article>
+          <article class="offer-card"><div class="offer-icon">⌖</div><h3>Location</h3><p><span data-lang="de">Unser Studio in Fürth — zentral, charmant, einzigartig.</span><span data-lang="en">Our studio in Fürth — central, charming, unique.</span></p><a href="#location"><span data-lang="de">Mehr erfahren ›</span><span data-lang="en">Learn more ›</span></a></article>
+        </div>
+        <div class="sketch-panel"></div>
+      </div>
+    </section>
 
-.logo { text-decoration: none; color: var(--white); display: flex; flex-direction: column; gap: 3px; }
-.logo-script { font-family: Parisienne, cursive; font-size: 44px; line-height: .8; letter-spacing: .02em; }
-.logo-script span { color: var(--red); }
-.logo-sub { text-transform: uppercase; font-size: 11px; letter-spacing: .34em; margin-left: 34px; color: var(--white); }
+    <section id="courses" class="section courses">
+      <div class="section-heading centered">
+        <p class="mini">Unterricht / Classes</p>
+        <h2><span data-lang="de">Kurse im Studio</span><span data-lang="en">Studio Courses</span></h2>
+        <p><span data-lang="de">Unsere Kurse sind fortlaufend. Ihr bucht Zehnerkarten, auf denen eure Teilnahme vermerkt wird. Die Karten sollten innerhalb von 4 Monaten eingelöst werden.</span><span data-lang="en">Our courses are ongoing. You book 10-class cards, where each participation is marked. Cards should be used within 4 months.</span></p>
+        <strong><span data-lang="de">10 Kursstunden à 75 Minuten + Austanzen · 150 € pro Person</span><span data-lang="en">10 lessons of 75 minutes + social dancing · €150 per person</span></strong>
+      </div>
+      <div class="course-grid">
+        <article class="course-card"><h3><span data-lang="de">Montag</span><span data-lang="en">Monday</span></h3><p>19:00 Beautiful Tango Basics<br>20:30 The Tango Matrix 2</p></article>
+        <article class="course-card"><h3><span data-lang="de">Dienstag</span><span data-lang="en">Tuesday</span></h3><p>19:00 Exploring Tango 1<br>20:30 Exploring Tango 2</p></article>
+        <article class="course-card"><h3><span data-lang="de">Mittwoch</span><span data-lang="en">Wednesday</span></h3><p>19:00 Discovering Tango<br>20:30 Playing with Tango 1</p></article>
+        <article class="course-card"><h3><span data-lang="de">Donnerstag</span><span data-lang="en">Thursday</span></h3><p>19:00 The Tango Matrix 1<br>20:30 Head over Heels into Tango 2</p></article>
+      </div>
+    </section>
 
-.nav { display: flex; align-items: center; gap: 30px; }
-.nav a { color: var(--white); text-decoration: none; text-transform: uppercase; font-size: 13px; font-weight: 700; letter-spacing: .08em; opacity: .9; position: relative; }
-.nav a::after { content: ""; position: absolute; left: 0; bottom: -12px; width: 0; height: 2px; background: var(--red); transition: .25s ease; }
-.nav a:hover::after { width: 100%; }
+    <section id="prices" class="section prices">
+      <div class="section-heading split"><div><p class="mini">Transparent</p><h2><span data-lang="de">Preise</span><span data-lang="en">Prices</span></h2></div></div>
+      <div class="price-table">
+        <div class="price-row"><span><span data-lang="de">Kurskarte</span><span data-lang="en">Course card</span></span><strong>150 €</strong><p><span data-lang="de">10 Kursstunden à 75 Minuten + Austanzen</span><span data-lang="en">10 lessons of 75 minutes + social dancing</span></p></div>
+        <div class="price-row"><span>Milonga / Practica</span><strong>12 €</strong><p><span data-lang="de">Studierende 5 €</span><span data-lang="en">Students €5</span></p></div>
+        <div class="price-row"><span>Festival Workshop</span><strong>30 €</strong><p><span data-lang="de">pro Person und Workshop</span><span data-lang="en">per person and workshop</span></p></div>
+        <div class="price-row"><span>Festival Seminar</span><strong>60 €</strong><p><span data-lang="de">pro Person und Seminar</span><span data-lang="en">per person and seminar</span></p></div>
+        <div class="price-row"><span><span data-lang="de">Privatstunde Festival</span><span data-lang="en">Festival private lesson</span></span><strong>150 €/h</strong><p>Sara Grdan & Ivan Terrazas</p></div>
+      </div>
+    </section>
 
-.actions { display: flex; align-items: center; gap: 10px; }
-.lang { border: 0; background: transparent; color: var(--red); font-size: 14px; letter-spacing: .12em; cursor: pointer; }
-.lang span { color: var(--white); opacity: .45; margin: 0 4px; }
-.circle { width: 38px; height: 38px; border: 1px solid var(--white); border-radius: 999px; display: grid; place-items: center; color: var(--white); text-decoration: none; font-weight: 700; transition: .2s; }
-.circle:hover { background: var(--red); border-color: var(--red); }
+    <section id="about" class="section about">
+      <div class="about-card">
+        <p class="mini">Female-owned · Community-led</p>
+        <h2><span data-lang="de">Über Steffitango</span><span data-lang="en">About Steffitango</span></h2>
+        <p><span data-lang="de">Steffitango ist ein weiblich geführter, lebendiger Tango-Raum in Fürth. Hier treffen klassische Tango-Kultur, moderne Offenheit und eine warme Community aufeinander. Das Team um Stefanie Stenzel schafft einen Ort, an dem Menschen Tango nicht nur lernen, sondern erleben: als Gespräch zwischen Körper, Musik, Rollen, Kulturen und Generationen.</span><span data-lang="en">Steffitango is a female-led, vibrant tango space in Fürth. Classic tango culture, modern openness and a warm community meet here. The team around Stefanie Stenzel creates a place where people do not only learn tango, but experience it: as a conversation between body, music, roles, cultures and generations.</span></p>
+        <strong>Petra · Stefan · Antonia · Steffi</strong>
+      </div>
+    </section>
 
-main, header, footer { position: relative; z-index: 1; }
-.section, .hero { padding-left: 5vw; padding-right: 5vw; }
+    <section id="location" class="section location">
+      <div class="location-copy">
+        <p class="mini">Fürth</p>
+        <h2>Location</h2>
+        <p><span data-lang="de">Studio Steffitango · Kaiserstraße 177, 90763 Fürth · Eingang im Innenhof. Schwingbodenparkett, angenehme Belüftung und ein Raum, der für Begegnung gemacht ist.</span><span data-lang="en">Studio Steffitango · Kaiserstraße 177, 90763 Fürth · entrance through the courtyard. Sprung dance floor, comfortable ventilation and a room made for connection.</span></p>
+        <a class="btn primary" href="https://maps.google.com/?q=Kaiserstraße+177,+90763+Fürth" target="_blank" rel="noreferrer"><span data-lang="de">Auf Google Maps ansehen</span><span data-lang="en">Open Google Maps</span></a>
+      </div>
+      <div class="map-card"><span>Kaiserstraße 177</span><strong>90763 Fürth</strong><p>Eingang im Innenhof</p></div>
+    </section>
 
-.hero {
-  min-height: calc(100vh - 92px);
-  display: grid;
-  grid-template-columns: 1fr 1.05fr .7fr;
-  align-items: center;
-  gap: 42px;
-  padding-top: 64px;
-  padding-bottom: 64px;
-  border-bottom: 1px solid var(--line);
-}
+    <section id="contact" class="contact">
+      <p class="signature">¡Viva el Tango!</p>
+      <h2><span data-lang="de">Bereit für deine nächste Tango-Runde?</span><span data-lang="en">Ready for your next tango round?</span></h2>
+      <p><span data-lang="de">Schreib uns eine E-Mail, frag nach Kursen oder komm zur nächsten Milonga. Allein oder zu zweit — Tango beginnt mit einem ersten Schritt.</span><span data-lang="en">Send us an email, ask about courses or join the next milonga. Solo or with a partner — tango begins with one first step.</span></p>
+      <div class="contact-buttons">
+        <a class="btn light" href="mailto:st@steffitango.de"><span data-lang="de">E-Mail schreiben</span><span data-lang="en">Send email</span></a>
+        <a class="btn ghost" href="https://www.facebook.com/" target="_blank" rel="noreferrer"><span data-lang="de">Facebook Kontakt</span><span data-lang="en">Facebook contact</span></a>
+      </div>
+    </section>
+  </main>
 
-.eyebrow, .mini { color: var(--red); text-transform: uppercase; letter-spacing: .24em; font-size: 12px; font-weight: 700; }
-.hero h1 { margin: 0; font-family: Cormorant Garamond, serif; font-size: clamp(62px, 8vw, 118px); line-height: .78; letter-spacing: -.055em; }
-.hero h1 span { display: block; }
-.hero h1 em { display: block; font-family: Parisienne, cursive; color: var(--red); font-size: 1.02em; font-style: normal; font-weight: 400; letter-spacing: -.02em; margin-top: 8px; }
-.ornament { margin: 24px 0 28px; display: flex; align-items: center; color: var(--red); gap: 12px; max-width: 360px; }
-.ornament span { height: 1px; flex: 1; background: var(--line); }
-.hero-body { color: #ded8d0; font-size: 18px; line-height: 1.8; max-width: 520px; }
-.hero-buttons { display: flex; gap: 14px; margin-top: 32px; flex-wrap: wrap; }
+  <footer>
+    <span>Steffitango · Kaiserstraße 177 · 90763 Fürth</span>
+    <span>© 2026 Steffitango</span>
+  </footer>
 
-.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 24px; text-decoration: none; text-transform: uppercase; font-size: 13px; letter-spacing: .09em; font-weight: 800; transition: .22s ease; }
-.btn.primary { background: linear-gradient(135deg, var(--red), var(--red2)); color: #fff; box-shadow: 0 18px 40px rgba(197,31,26,.24); }
-.btn.primary:hover { transform: translateY(-2px); filter: brightness(1.08); }
-.btn.ghost { border: 1px solid var(--line); color: var(--white); background: rgba(255,255,255,.04); }
-.btn.ghost:hover { background: rgba(255,255,255,.11); }
-.btn.light { background: var(--white); color: #050505; }
+  <script>
+    function toggleLanguage() {
+      document.body.classList.toggle('english');
+      document.documentElement.lang = document.body.classList.contains('english') ? 'en' : 'de';
+    }
+  </script>
+</body>
+</html>
 
-.hero-art { position: relative; min-height: 620px; }
-.photo-main {
-  position: absolute;
-  inset: 2% 0 0 0;
-  border-radius: 0;
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.9) 0%, rgba(0,0,0,.2) 28%, rgba(0,0,0,.14) 58%, rgba(0,0,0,.88) 100%),
-    linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.94)),
-    url('/images/tango-hero.jpg');
-  background-size: cover;
-  background-position: center;
-  filter: grayscale(1) contrast(1.25) brightness(.72);
-}
-.photo-main::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 55% 35%, transparent 0 24%, rgba(0,0,0,.25) 42%, rgba(0,0,0,.9) 100%),
-    linear-gradient(110deg, transparent 0 48%, rgba(197,31,26,.16) 50%, transparent 68%);
-}
-.photo-main::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 6%;
-  width: 48%;
-  height: 82%;
-  transform: translateX(-50%);
-  background:
-    radial-gradient(ellipse at 42% 18%, #ddd 0 4%, transparent 4.5%),
-    radial-gradient(ellipse at 58% 18%, #eee 0 4%, transparent 4.5%),
-    linear-gradient(82deg, transparent 0 28%, rgba(240,240,240,.82) 29% 36%, transparent 37% 100%),
-    linear-gradient(102deg, transparent 0 49%, rgba(197,31,26,.78) 50% 62%, transparent 63% 100%),
-    radial-gradient(ellipse at 52% 48%, rgba(255,255,255,.55) 0 25%, transparent 27%);
-  opacity: .55;
-  mix-blend-mode: screen;
-  filter: blur(.4px);
-}
-.spotlight { position: absolute; inset: 0; background: radial-gradient(circle at 50% 46%, rgba(255,255,255,.16), transparent 30%); pointer-events: none; }
-
-.quote-card { border-left: 1px solid rgba(197,31,26,.55); padding-left: 28px; max-width: 330px; }
-.quote-mark { font-family: Cormorant Garamond, serif; color: var(--red); font-size: 72px; line-height: .4; }
-.quote-card p { font-size: 18px; line-height: 1.8; color: var(--white); }
-.quote-card span { color: var(--red); text-transform: uppercase; letter-spacing: .18em; font-family: Cormorant Garamond, serif; font-size: 18px; }
-
-.pillars { display: grid; grid-template-columns: repeat(4, 1fr); padding: 28px 5vw; border-bottom: 1px solid var(--line); background: rgba(0,0,0,.55); }
-.pillar { display: flex; gap: 18px; padding: 0 28px; border-right: 1px solid var(--line); }
-.pillar:last-child { border-right: 0; }
-.pillar-icon { color: var(--red); font-size: 42px; line-height: 1; font-family: Cormorant Garamond, serif; }
-.pillar h3 { margin: 0 0 8px; text-transform: uppercase; letter-spacing: .12em; font-family: Cormorant Garamond, serif; font-size: 20px; }
-.pillar p { margin: 0; color: var(--muted); line-height: 1.55; font-size: 14px; }
-
-.section { padding-top: 72px; padding-bottom: 72px; border-bottom: 1px solid var(--line); }
-.section-heading { margin-bottom: 34px; }
-.section-heading.split { display: flex; justify-content: space-between; gap: 24px; align-items: end; }
-.section-heading.centered { max-width: 820px; margin: 0 auto 38px; text-align: center; }
-.section-heading h2, .about h2, .location h2, .contact-section h2 { margin: 0; font-family: Cormorant Garamond, serif; font-size: clamp(38px, 5vw, 62px); line-height: .95; font-weight: 600; letter-spacing: -.04em; }
-.section-heading p:not(.mini), .courses .section-heading p, .about-card p, .location p, .contact-section p { color: var(--muted); line-height: 1.8; font-size: 16px; }
-.section-heading strong { display: inline-block; margin-top: 16px; color: var(--red); }
-.link-red { color: var(--red); text-decoration: none; text-transform: uppercase; font-size: 13px; letter-spacing: .12em; font-weight: 800; }
-
-.event-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
-.event-card { min-height: 330px; position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,.25); background: #090909; transition: .25s ease; }
-.event-card:hover { transform: translateY(-6px); border-color: rgba(197,31,26,.75); }
-.event-image { position: absolute; inset: 0; background-size: cover; background-position: center; filter: grayscale(1) contrast(1.18) brightness(.6); opacity: .8; }
-.event-1 .event-image { background-image: linear-gradient(rgba(0,0,0,.15), rgba(0,0,0,.85)), url('/images/tango-hero.jpg'); }
-.event-2 .event-image { background-image: linear-gradient(rgba(0,0,0,.2), rgba(0,0,0,.88)), url('/images/tango-hero.jpg'); background-position: 62% center; }
-.event-3 .event-image { background-image: linear-gradient(rgba(0,0,0,.15), rgba(0,0,0,.88)), url('/images/tango-hero.jpg'); background-position: 24% center; }
-.event-4 .event-image { background-image: linear-gradient(rgba(255,255,255,.74), rgba(0,0,0,.72)), url('/images/tango-sketch.jpg'); background-size: cover; background-position: center; filter: grayscale(1) contrast(1.08); }
-.event-type { position: absolute; top: 0; left: 0; background: var(--red); padding: 8px 14px; text-transform: uppercase; font-size: 12px; letter-spacing: .1em; font-weight: 800; }
-.event-content { position: absolute; left: 0; right: 0; bottom: 0; padding: 24px; text-align: center; }
-.event-content h3 { font-family: Parisienne, cursive; color: var(--white); font-size: 52px; line-height: .82; margin: 0 0 18px; font-weight: 400; }
-.event-content strong { color: var(--red); font-size: 20px; }
-.event-content p { margin: 7px 0 0; color: var(--white); font-size: 14px; }
-
-.offer-layout { display: grid; grid-template-columns: 1.55fr .8fr; align-items: stretch; gap: 28px; }
-.offer-grid { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--line); background: rgba(255,255,255,.03); }
-.offer-card { padding: 32px 22px; border-right: 1px solid var(--line); min-height: 260px; }
-.offer-card:last-child { border-right: 0; }
-.offer-icon { color: var(--red); font-size: 42px; margin-bottom: 20px; }
-.offer-card h3 { font-family: Cormorant Garamond, serif; font-size: 26px; text-transform: uppercase; letter-spacing: .04em; margin: 0 0 12px; }
-.offer-card p { color: var(--muted); line-height: 1.65; font-size: 14px; }
-.offer-card a { color: var(--red); text-decoration: none; text-transform: uppercase; font-size: 12px; letter-spacing: .12em; font-weight: 800; }
-.sketch-panel { min-height: 360px; position: relative; overflow: hidden; }
-.sketch-image { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.95), rgba(0,0,0,.1)), url('/images/tango-sketch.jpg'); background-size: contain; background-repeat: no-repeat; background-position: center right; filter: grayscale(1) contrast(1.12); }
-.sketch-image::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 68% 46%, rgba(255,255,255,.15), transparent 28%); }
-
-.course-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
-.course-card, .about-card, .map-card, .price-table { border: 1px solid var(--line); background: rgba(255,255,255,.045); backdrop-filter: blur(10px); }
-.course-card { padding: 28px; min-height: 190px; }
-.course-card h3 { margin: 0 0 14px; font-family: Cormorant Garamond, serif; font-size: 34px; color: var(--red); }
-.course-card p { margin: 0; color: var(--muted); line-height: 1.75; }
-
-.price-table { max-width: 1100px; }
-.price-row { display: grid; grid-template-columns: 1fr .4fr 1.3fr; gap: 22px; padding: 22px 26px; border-bottom: 1px solid var(--line); align-items: center; }
-.price-row:last-child { border-bottom: 0; }
-.price-row span { font-family: Cormorant Garamond, serif; font-size: 26px; }
-.price-row strong { color: var(--red); font-size: 22px; }
-.price-row p { color: var(--muted); margin: 0; }
-
-.about { display: grid; grid-template-columns: 1fr; }
-.about-card { max-width: 980px; padding: 46px; background: linear-gradient(135deg, rgba(197,31,26,.13), rgba(255,255,255,.04)); }
-.about-card strong { color: var(--red); font-family: Parisienne, cursive; font-size: 34px; font-weight: 400; }
-
-.location { display: grid; grid-template-columns: 1.1fr .8fr; gap: 28px; align-items: stretch; }
-.location > div:first-child { padding-right: 5vw; }
-.map-card { min-height: 310px; display: flex; flex-direction: column; justify-content: end; padding: 36px; background:
-  linear-gradient(135deg, rgba(0,0,0,.7), rgba(197,31,26,.28)),
-  repeating-linear-gradient(45deg, rgba(255,255,255,.08) 0 1px, transparent 1px 12px);
-}
-.map-card span { color: var(--red); text-transform: uppercase; letter-spacing: .18em; font-weight: 800; }
-.map-card strong { font-family: Cormorant Garamond, serif; font-size: 48px; margin-top: 10px; }
-.map-card p { color: var(--white); }
-
-.contact-section { padding: 82px 5vw; text-align: center; background: radial-gradient(circle at 50% 0%, rgba(197,31,26,.3), transparent 35%), #070707; border-bottom: 1px solid var(--line); }
-.signature { font-family: Parisienne, cursive; color: var(--white) !important; font-size: 44px !important; margin: 0 0 14px; }
-.contact-section h2 { max-width: 820px; margin: 0 auto; }
-.contact-section > p:not(.signature) { max-width: 720px; margin: 22px auto 0; }
-.contact-buttons { display: flex; justify-content: center; gap: 14px; margin-top: 32px; flex-wrap: wrap; }
-
-footer { padding: 26px 5vw; display: flex; justify-content: space-between; gap: 20px; color: #777; font-size: 13px; background: #020202; }
-
-@media (max-width: 1180px) {
-  .nav { display: none; }
-  .hero { grid-template-columns: 1fr; }
-  .hero-art { min-height: 520px; order: -1; }
-  .quote-card { max-width: 720px; }
-  .pillars, .event-grid, .course-grid { grid-template-columns: repeat(2, 1fr); }
-  .offer-layout, .location { grid-template-columns: 1fr; }
-  .offer-grid { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 720px) {
-  .topbar { height: auto; padding: 18px 5vw; align-items: flex-start; }
-  .logo-script { font-size: 36px; }
-  .actions .circle { display: none; }
-  .hero { padding-top: 44px; }
-  .hero-art { min-height: 430px; }
-  .pillars, .event-grid, .course-grid, .offer-grid { grid-template-columns: 1fr; }
-  .pillar, .offer-card { border-right: 0; border-bottom: 1px solid var(--line); }
-  .pillar:last-child, .offer-card:last-child { border-bottom: 0; }
-  .section-heading.split { display: block; }
-  .price-row { grid-template-columns: 1fr; gap: 6px; }
-  footer { flex-direction: column; }
-}
-`;
