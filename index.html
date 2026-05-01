@@ -1,470 +1,680 @@
 import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
+  ArrowRight,
   CalendarDays,
+  ChevronRight,
+  Facebook,
+  Gem,
+  Heart,
+  Home,
+  Languages,
   Mail,
   MapPin,
-  Facebook,
-  Home,
-  Heart,
+  Menu,
   Music2,
   Sparkles,
-  Users,
-  GraduationCap,
   Ticket,
-  ArrowRight,
-  Languages,
+  UserRoundHeart,
+  Users,
+  X,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 
-const copy = {
+/**
+ * STEFFITANGO 2026 — Premium Landing Page Concept
+ * ------------------------------------------------
+ * Copy-paste ready React component for a GitHub/Vite/Next-style frontend.
+ * Styling: TailwindCSS. No external images required.
+ * Replace contact/social links with final official URLs before publishing.
+ */
+
+const CONTACT_EMAIL = "st@steffitango.de";
+const FACEBOOK_URL = "https://www.facebook.com/";
+const GOOGLE_MAPS_URL = "https://maps.google.com/?q=Kaiserstraße+177,+90763+Fürth";
+
+const translations = {
   de: {
+    meta: {
+      langLabel: "EN",
+      brand: "Steffitango",
+      location: "Kaiserstraße 177 · Fürth",
+      owned: "Female-owned Tango Studio",
+    },
     nav: {
       home: "Home",
+      events: "Events",
       courses: "Kurse",
-      workshops: "Workshops",
-      private: "Privatstunden",
-      events: "Kalender",
-      location: "Location",
+      prices: "Preise",
+      about: "Über uns",
+      location: "Ort",
       contact: "Kontakt",
     },
-    heroKicker: "Tango Argentino in Fürth",
-    heroTitle: "Steffitango — lebendig, verspielt, elegant.",
-    heroText:
-      "Ein warmes Tango-Studio für Neugierige, Anfänger*innen und Aficionad@s. Kurse, Milongas, Practicas und Workshops mit Herz, Technik und viel Raum für Begegnung.",
-    quote:
-      "Wo immer Tanzende mit dem Fuß auftreten, da entspringt dem Staub ein Quell des Lebens.",
-    quoteAuthor: "Rumi",
-    ctaCourses: "Kurse entdecken",
-    ctaEmail: "E-Mail schreiben",
-    ctaFacebook: "Facebook Kontakt",
-    womanOwned: "Female-owned · vibrant · community-led",
-    introTitle: "Ein Studio, das Tango nicht nur unterrichtet — sondern fühlbar macht.",
-    introText:
-      "Steffitango verbindet klassische Tango-Kultur mit moderner Offenheit: Salon, Milonguero, Neo, Freestyle und spielerische Forschung am eigenen Körper. Die Gestaltung setzt auf Schwarz-Weiß-Kontrast, rote Akzente und eine feminine, warme Atmosphäre.",
-    coursesTitle: "Fortlaufende Kurse",
-    coursesText:
-      "10 Kursstunden à 75 Minuten plus Austanzen. Zehnerkarte: 150 € pro Person, innerhalb von 4 Monaten einlösbar.",
-    monday: "Montag",
-    tuesday: "Dienstag",
-    wednesday: "Mittwoch",
-    thursday: "Donnerstag",
-    eventsTitle: "Tanzen & Kalender 2026",
-    eventsText:
-      "Milongas, Practicas und Festival-Momente für die Tango-Community in Fürth und Nürnberg.",
-    workshopsTitle: "Festivalito SientoTango 2026",
-    workshopsText:
-      "17.–19. April 2026: Workshops, Seminare, Practica, TangoCafés und drei Abendmilongas mit internationalen Maestr@s.",
-    privateTitle: "Privatstunden",
-    privateText:
-      "Individuelle Fragen, Technik, Rollenwechsel, Musikalität oder persönliches Feintuning — per E-Mail an Stefanie Stenzel anfragen.",
-    locationTitle: "Studio & Location",
-    locationText:
-      "Studio Steffitango, Kaiserstraße 177, 90763 Fürth. Eingang im Innenhof.",
-    contactTitle: "Bereit für die nächste Tanzrunde?",
-    contactText:
-      "Allein oder zu zweit, Anfänger*in oder Aficionad@ — hier beginnt dein nächster Tango-Schritt.",
-    footer: "Steffitango · Kaiserstraße 177 · 90763 Fürth",
+    hero: {
+      eyebrow: "Argentinischer Tango · Fürth · 2026",
+      title: "Tango, der atmet. Eine Nacht, die bleibt.",
+      text:
+        "Steffitango ist ein lebendiger Ort für Tango Argentino: elegant, herzlich, verspielt und offen für Menschen, die Musik, Nähe, Bewegung und Gemeinschaft suchen.",
+      primary: "Events ansehen",
+      secondary: "Kurse entdecken",
+      quote:
+        "Wo immer Tanzende mit dem Fuß auftreten, da entspringt dem Staub ein Quell des Lebens.",
+      quoteAuthor: "Rumi",
+    },
+    mood: [
+      "Schwarz. Weiß. Rot. Ein Hauch von Nacht.",
+      "Salon · Neo · Milonguero · Freestyle",
+      "Kurse · Milongas · Practica · Festivalito",
+    ],
+    events: {
+      eyebrow: "Tanzkalender",
+      title: "Die wichtigsten Tango-Momente 2026",
+      text:
+        "Events sind das Herz der Community: klassische Milongas, moderne Musikmixe, offene Practicas und das Festivalito SientoTango.",
+      cards: [
+        {
+          name: "Milonga “Volverás”",
+          tag: "Klassisch · elegant · herzlich",
+          time: "Freitag · 20:00 bis ca. Mitternacht",
+          price: "Eintritt: 12 € · Studierende 5 €",
+          text:
+            "Der Abend für Tango-Gefühl, Ronda, Sekt, Schwingbodenparkett und Begegnungen. Für alle, die die klassische Milonga-Atmosphäre lieben.",
+        },
+        {
+          name: "Milonga “Cosa Nuestra”",
+          tag: "Modern · Neo · Freestyle",
+          time: "20:00 bis ca. Mitternacht",
+          price: "Eintritt: 12 € · Studierende 5 €",
+          text:
+            "Ein gemeinsames Projekt der Community: moderne Orchester, Neotango und Freestyle. Nicht steif erklärt — sondern erlebt.",
+        },
+        {
+          name: "Practica “La Lúdica”",
+          tag: "Üben · spielen · fragen",
+          time: "Sonntag · 16:00 bis 19:00",
+          price: "Eintritt: 12 € · Studierende 5 €",
+          text:
+            "Der spielerische Link zwischen Unterricht und Milonga. Für Anfänger*innen, Aficionad@s, Doubleroler und alle, die ausprobieren wollen.",
+        },
+      ],
+      volveras: "Volverás Termine",
+      ludica: "La Lúdica Termine",
+      festival: {
+        title: "Festivalito SientoTango 2026",
+        date: "17.–19. April 2026",
+        text:
+          "Drei Tage Tango mit Workshops, Seminaren, Practica, TangoCafés und Abendmilongas in Fürth. Mit Sara Grdan & Ivan Terrazas sowie Lucila Cionci & Joe Corbata.",
+        button: "Festival-Highlights",
+      },
+    },
+    courses: {
+      eyebrow: "Unterricht",
+      title: "Kurse für Neugierige, Anfänger*innen und Aficionad@s",
+      text:
+        "Fortlaufende Kurse mit Zehnerkarten. Jede Einheit: 75 Minuten plus Austanzen. Der Fokus liegt auf Verbindung, Körpergefühl, Musikalität und Freude an der Bewegung.",
+      priceNote: "10 Kursstunden · 150 € pro Person · innerhalb von 4 Monaten einlösbar",
+    },
+    courseCards: [
+      {
+        day: "Montag",
+        items: [
+          ["19:00–20:15", "Beautiful Tango Basics", "Sicherheit, Balance und Genuss bei jedem Schritt."],
+          ["20:30–21:45", "The Tango Matrix 2", "Neo, Salon, Milonguero, Dynamik und Flow."],
+        ],
+      },
+      {
+        day: "Dienstag",
+        items: [
+          ["19:00–20:15", "Exploring Tango 1", "Grundlagen vertiefen und Tango-Prinzipien erforschen."],
+          ["20:30–21:45", "Exploring Tango 2", "Themengleich, zweite Gruppe, gleiche Forschungsfreude."],
+        ],
+      },
+      {
+        day: "Mittwoch",
+        items: [
+          ["19:00–20:15", "Discovering Tango", "Für neue Entdeckungen, Rollenwechsel und moderne Musik."],
+          ["20:30–21:45", "Playing with Tango 1", "Für erfahrene Tänzer*innen mit Lust auf Kreativität."],
+        ],
+      },
+      {
+        day: "Donnerstag",
+        items: [
+          ["19:00–20:15", "The Tango Matrix 1", "Stile verbinden: Neo, Salon und Milonguero."],
+          ["20:30–21:45", "Head over Heels into Tango 2", "Basics anwenden, spüren, vertiefen."],
+        ],
+      },
+    ],
+    prices: {
+      eyebrow: "Preise",
+      title: "Transparent, fair, community-nah",
+      text: "Einfach ankommen, tanzen, lernen und wiederkommen.",
+      rows: [
+        ["Kurskarte", "150 €", "10 × 75 Minuten plus Austanzen"],
+        ["Milonga / Practica", "12 €", "Studierende 5 €"],
+        ["Festival Workshop", "30 €", "pro Person und Workshop"],
+        ["Festival Seminar", "60 €", "pro Person und Seminar"],
+        ["Privatstunde Festival", "150 €/h", "bei Sara Grdan & Ivan Terrazas"],
+      ],
+    },
+    about: {
+      eyebrow: "Menschen",
+      title: "Ein weiblich geführter Ort mit Herz, Stil und Haltung",
+      text:
+        "Steffitango lebt von Menschen, die Tango nicht als starre Schrittfolge verstehen, sondern als Gespräch: zwischen Körpern, Musik, Rollen, Kulturen und Generationen. Das Team um Stefanie Stenzel schafft einen Raum, in dem Eleganz und Humor, Technik und Freiheit, Nähe und Respekt zusammenfinden.",
+      team: "Petra · Stefan · Antonia · Steffi",
+      values: ["warm", "playful", "feminine", "precise", "inclusive", "alive"],
+    },
+    location: {
+      eyebrow: "Studio",
+      title: "Mitten in Fürth. Eingang im Innenhof.",
+      text:
+        "Studio Steffitango, Kaiserstraße 177, 90763 Fürth. Schwingbodenparkett, angenehme Belüftung und ein Raum, der gemacht ist für Begegnung.",
+      maps: "Google Maps öffnen",
+    },
+    contact: {
+      title: "Bereit für deine nächste Tango-Runde?",
+      text:
+        "Schreib eine E-Mail, frag nach Kursen oder komm zur nächsten Milonga. Allein oder zu zweit — Tango beginnt mit einem ersten Schritt.",
+      email: "E-Mail schreiben",
+      facebook: "Facebook Kontakt",
+    },
   },
   en: {
+    meta: {
+      langLabel: "DE",
+      brand: "Steffitango",
+      location: "Kaiserstraße 177 · Fürth",
+      owned: "Female-owned Tango Studio",
+    },
     nav: {
       home: "Home",
+      events: "Events",
       courses: "Courses",
-      workshops: "Workshops",
-      private: "Private lessons",
-      events: "Calendar",
+      prices: "Prices",
+      about: "About",
       location: "Location",
       contact: "Contact",
     },
-    heroKicker: "Argentine Tango in Fürth",
-    heroTitle: "Steffitango — alive, playful, elegant.",
-    heroText:
-      "A warm tango studio for curious newcomers, beginners and aficionados. Courses, milongas, practicas and workshops with heart, technique and room for connection.",
-    quote:
-      "Wherever dancers step with their feet, a spring of life rises from the dust.",
-    quoteAuthor: "Rumi",
-    ctaCourses: "Explore courses",
-    ctaEmail: "Send email",
-    ctaFacebook: "Facebook contact",
-    womanOwned: "Female-owned · vibrant · community-led",
-    introTitle: "A studio that does not only teach tango — it makes tango tangible.",
-    introText:
-      "Steffitango blends classic tango culture with modern openness: salon, milonguero, neo, freestyle and playful research through the body. The design uses black-and-white contrast, red accents and a warm feminine atmosphere.",
-    coursesTitle: "Ongoing courses",
-    coursesText:
-      "10 lessons of 75 minutes plus social dancing. 10-class card: €150 per person, redeemable within 4 months.",
-    monday: "Monday",
-    tuesday: "Tuesday",
-    wednesday: "Wednesday",
-    thursday: "Thursday",
-    eventsTitle: "Dance & 2026 Calendar",
-    eventsText:
-      "Milongas, practicas and festival moments for the tango community around Fürth and Nuremberg.",
-    workshopsTitle: "Festivalito SientoTango 2026",
-    workshopsText:
-      "April 17–19, 2026: workshops, seminars, practica, tango cafés and three evening milongas with international maestros.",
-    privateTitle: "Private lessons",
-    privateText:
-      "Individual questions, technique, role switching, musicality or personal fine-tuning — request by email to Stefanie Stenzel.",
-    locationTitle: "Studio & Location",
-    locationText:
-      "Studio Steffitango, Kaiserstraße 177, 90763 Fürth. Entrance through the courtyard.",
-    contactTitle: "Ready for the next dance round?",
-    contactText:
-      "Solo or with a partner, beginner or aficionado — your next tango step begins here.",
-    footer: "Steffitango · Kaiserstraße 177 · 90763 Fürth",
+    hero: {
+      eyebrow: "Argentine Tango · Fürth · 2026",
+      title: "Tango that breathes. A night that stays.",
+      text:
+        "Steffitango is a vibrant home for Argentine tango: elegant, warm, playful and open to people who seek music, closeness, movement and community.",
+      primary: "View events",
+      secondary: "Explore courses",
+      quote:
+        "Wherever dancers step with their feet, a spring of life rises from the dust.",
+      quoteAuthor: "Rumi",
+    },
+    mood: [
+      "Black. White. Red. A touch of night.",
+      "Salon · Neo · Milonguero · Freestyle",
+      "Courses · Milongas · Practica · Festivalito",
+    ],
+    events: {
+      eyebrow: "Dance calendar",
+      title: "The key tango moments of 2026",
+      text:
+        "Events are the heart of the community: classic milongas, modern music mixes, open practicas and Festivalito SientoTango.",
+      cards: [
+        {
+          name: "Milonga “Volverás”",
+          tag: "Classic · elegant · warm",
+          time: "Friday · 8:00 pm to around midnight",
+          price: "Entry: €12 · students €5",
+          text:
+            "An evening for tango feeling, ronda, sparkling wine, sprung dance floor and connection. For everyone who loves the classic milonga atmosphere.",
+        },
+        {
+          name: "Milonga “Cosa Nuestra”",
+          tag: "Modern · neo · freestyle",
+          time: "8:00 pm to around midnight",
+          price: "Entry: €12 · students €5",
+          text:
+            "A community-born project: modern orchestras, neotango and freestyle. Not over-explained — experienced on the floor.",
+        },
+        {
+          name: "Practica “La Lúdica”",
+          tag: "Practice · play · ask",
+          time: "Sunday · 4:00 pm to 7:00 pm",
+          price: "Entry: €12 · students €5",
+          text:
+            "The playful link between class and milonga. For beginners, aficionados, double-role dancers and everyone who wants to experiment.",
+        },
+      ],
+      volveras: "Volverás dates",
+      ludica: "La Lúdica dates",
+      festival: {
+        title: "Festivalito SientoTango 2026",
+        date: "April 17–19, 2026",
+        text:
+          "Three days of tango with workshops, seminars, practica, TangoCafés and evening milongas in Fürth. Featuring Sara Grdan & Ivan Terrazas and Lucila Cionci & Joe Corbata.",
+        button: "Festival highlights",
+      },
+    },
+    courses: {
+      eyebrow: "Classes",
+      title: "Courses for curious newcomers, beginners and aficionados",
+      text:
+        "Ongoing courses with 10-class cards. Each session: 75 minutes plus social dancing. The focus is connection, body awareness, musicality and joy in movement.",
+      priceNote: "10 lessons · €150 per person · redeemable within 4 months",
+    },
+    courseCards: [
+      {
+        day: "Monday",
+        items: [
+          ["19:00–20:15", "Beautiful Tango Basics", "Safety, balance and joy with every step."],
+          ["20:30–21:45", "The Tango Matrix 2", "Neo, salon, milonguero, dynamics and flow."],
+        ],
+      },
+      {
+        day: "Tuesday",
+        items: [
+          ["19:00–20:15", "Exploring Tango 1", "Deepen the basics and research tango principles."],
+          ["20:30–21:45", "Exploring Tango 2", "Same theme, second group, same curiosity."],
+        ],
+      },
+      {
+        day: "Wednesday",
+        items: [
+          ["19:00–20:15", "Discovering Tango", "New discoveries, role switching and modern music."],
+          ["20:30–21:45", "Playing with Tango 1", "For experienced dancers craving creativity."],
+        ],
+      },
+      {
+        day: "Thursday",
+        items: [
+          ["19:00–20:15", "The Tango Matrix 1", "Connecting styles: neo, salon and milonguero."],
+          ["20:30–21:45", "Head over Heels into Tango 2", "Apply, feel and deepen the basics."],
+        ],
+      },
+    ],
+    prices: {
+      eyebrow: "Prices",
+      title: "Transparent, fair, community-minded",
+      text: "Arrive, dance, learn and return — without confusion.",
+      rows: [
+        ["Course card", "€150", "10 × 75 minutes plus social dancing"],
+        ["Milonga / Practica", "€12", "students €5"],
+        ["Festival workshop", "€30", "per person and workshop"],
+        ["Festival seminar", "€60", "per person and seminar"],
+        ["Festival private lesson", "€150/h", "with Sara Grdan & Ivan Terrazas"],
+      ],
+    },
+    about: {
+      eyebrow: "People",
+      title: "A female-led space with heart, style and presence",
+      text:
+        "Steffitango is shaped by people who do not treat tango as a rigid step sequence, but as a conversation: between bodies, music, roles, cultures and generations. The team around Stefanie Stenzel creates a space where elegance and humor, technique and freedom, closeness and respect belong together.",
+      team: "Petra · Stefan · Antonia · Steffi",
+      values: ["warm", "playful", "feminine", "precise", "inclusive", "alive"],
+    },
+    location: {
+      eyebrow: "Studio",
+      title: "In the heart of Fürth. Entrance through the courtyard.",
+      text:
+        "Studio Steffitango, Kaiserstraße 177, 90763 Fürth. Sprung dance floor, comfortable ventilation and a room made for connection.",
+      maps: "Open Google Maps",
+    },
+    contact: {
+      title: "Ready for your next tango round?",
+      text:
+        "Send an email, ask about courses or join the next milonga. Solo or with a partner — tango begins with one first step.",
+      email: "Send email",
+      facebook: "Facebook contact",
+    },
   },
 };
 
-const courseData = [
-  {
-    dayKey: "monday",
-    items: [
-      { time: "19:00–20:15", title: "Beautiful Tango Basics ❣️", level: "All levels / beginners welcome" },
-      { time: "20:30–21:45", title: "The Tango Matrix 2", level: "Neo · Salon · Milonguero" },
-    ],
-  },
-  {
-    dayKey: "tuesday",
-    items: [
-      { time: "19:00–20:15", title: "Exploring Tango 1", level: "Basics plus research group" },
-      { time: "20:30–21:45", title: "Exploring Tango 2", level: "Same theme, second group" },
-    ],
-  },
-  {
-    dayKey: "wednesday",
-    items: [
-      { time: "19:00–20:15", title: "Discovering Tango", level: "New doublerolers welcome" },
-      { time: "20:30–21:45", title: "Playing with Tango 1", level: "Aficionad@s / creative flow" },
-    ],
-  },
-  {
-    dayKey: "thursday",
-    items: [
-      { time: "19:00–20:15", title: "The Tango Matrix 1", level: "Neo · Salon · Milonguero" },
-      { time: "20:30–21:45", title: "Head over Heels into Tango 2", level: "Basics known / next steps" },
-    ],
-  },
-];
-
 const volverasDates = [
-  "24.04", "15.05", "29.05", "12.06", "26.06", "10.07", "24.07", "11.09", "18.09", "02.10", "16.10", "30.10", "13.11", "20.11", "11.12", "26.12"
+  "24.04", "15.05", "29.05", "12.06", "26.06", "10.07", "24.07", "11.09", "18.09", "02.10", "16.10", "30.10", "13.11", "20.11", "11.12", "26.12",
 ];
 
 const ludicaDates = [
-  "26.04", "17.05", "31.05", "14.06", "28.06", "12.07", "26.07", "20.09", "11.10", "18.10", "15.11", "22.11", "13.12", "27.12"
+  "26.04", "17.05", "31.05", "14.06", "28.06", "12.07", "26.07", "20.09", "11.10", "18.10", "15.11", "22.11", "13.12", "27.12",
 ];
 
-function SectionTitle({ eyebrow, title, text }) {
+function cn(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
+
+function SectionHeader({ eyebrow, title, text, align = "center" }) {
   return (
-    <div className="mx-auto max-w-3xl text-center">
-      <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-red-700/30 bg-red-700/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-red-700">
+    <div className={cn("max-w-3xl", align === "center" ? "mx-auto text-center" : "text-left")}>
+      <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-red-300/20 bg-red-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-red-200">
         <Sparkles className="h-3.5 w-3.5" /> {eyebrow}
-      </div>
-      <h2 className="font-serif text-4xl font-semibold tracking-tight text-zinc-950 md:text-5xl">{title}</h2>
-      <p className="mt-5 text-base leading-8 text-zinc-600 md:text-lg">{text}</p>
+      </p>
+      <h2 className="font-serif text-4xl font-semibold leading-tight tracking-[-0.04em] text-white md:text-6xl">
+        {title}
+      </h2>
+      <p className="mt-5 text-base leading-8 text-zinc-300 md:text-lg">{text}</p>
     </div>
   );
 }
 
-function DancingCoupleIllustration() {
+function TangoSilhouette() {
   return (
-    <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-[2rem] border border-zinc-200 bg-zinc-950 shadow-2xl">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(255,255,255,0.18),transparent_35%),linear-gradient(135deg,rgba(127,29,29,0.55),transparent_45%)]" />
-      <div className="absolute left-1/2 top-10 h-72 w-72 -translate-x-1/2 rounded-full border border-white/10" />
-      <div className="absolute bottom-0 left-0 right-0 h-44 bg-gradient-to-t from-red-950/80 to-transparent" />
+    <div className="relative min-h-[560px] overflow-hidden rounded-[2rem] border border-white/10 bg-[#080808] shadow-[0_40px_120px_rgba(0,0,0,0.65)]">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_22%,rgba(255,255,255,0.18),transparent_22%),radial-gradient(circle_at_65%_70%,rgba(185,28,28,0.28),transparent_36%),linear-gradient(160deg,rgba(255,255,255,0.08),transparent_38%)]" />
+      <div className="absolute left-1/2 top-10 h-[420px] w-[420px] -translate-x-1/2 rounded-full border border-white/10" />
+      <div className="absolute left-[18%] top-[18%] h-64 w-20 -rotate-12 rounded-full bg-white/5 blur-2xl" />
+      <div className="absolute bottom-0 left-0 right-0 h-56 bg-gradient-to-t from-red-950/70 via-black/70 to-transparent" />
 
       <motion.div
-        initial={{ rotate: -2, y: 12 }}
-        animate={{ rotate: 2, y: 0 }}
-        transition={{ duration: 4, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
-        className="absolute bottom-20 left-[24%] h-60 w-24"
+        initial={{ x: -8, rotate: -4 }}
+        animate={{ x: 8, rotate: 3 }}
+        transition={{ duration: 5, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
+        className="absolute bottom-28 left-[25%] h-72 w-28"
       >
-        <div className="absolute left-8 top-0 h-12 w-12 rounded-full bg-zinc-100" />
-        <div className="absolute left-7 top-11 h-28 w-14 rounded-t-full bg-emerald-800" />
-        <div className="absolute left-2 top-26 h-6 w-20 -rotate-12 rounded-full bg-zinc-100" />
-        <div className="absolute left-9 top-36 h-24 w-4 rounded-full bg-zinc-100" />
-        <div className="absolute left-14 top-36 h-24 w-4 rotate-12 rounded-full bg-zinc-100" />
+        <div className="absolute left-9 top-0 h-12 w-12 rounded-full bg-zinc-200 shadow-[0_0_40px_rgba(255,255,255,0.35)]" />
+        <div className="absolute left-9 top-12 h-36 w-14 rounded-t-full bg-emerald-900" />
+        <div className="absolute left-0 top-24 h-5 w-28 -rotate-[18deg] rounded-full bg-zinc-200" />
+        <div className="absolute left-11 top-40 h-32 w-4 rounded-full bg-zinc-300" />
+        <div className="absolute left-16 top-40 h-32 w-4 rotate-[14deg] rounded-full bg-zinc-300" />
       </motion.div>
 
       <motion.div
-        initial={{ rotate: 4, y: 0 }}
-        animate={{ rotate: -3, y: 10 }}
-        transition={{ duration: 4, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
-        className="absolute bottom-16 right-[18%] h-64 w-32"
+        initial={{ x: 10, rotate: 5 }}
+        animate={{ x: -8, rotate: -4 }}
+        transition={{ duration: 5, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
+        className="absolute bottom-24 right-[17%] h-80 w-40"
       >
-        <div className="absolute left-9 top-0 h-11 w-11 rounded-full bg-zinc-100" />
-        <div className="absolute left-8 top-10 h-24 w-16 rounded-t-full bg-red-700" />
-        <div className="absolute left-1 top-28 h-24 w-28 rounded-full bg-red-800" />
-        <div className="absolute left-5 top-24 h-5 w-24 rotate-12 rounded-full bg-zinc-100" />
-        <div className="absolute left-12 top-44 h-24 w-4 -rotate-6 rounded-full bg-zinc-100" />
-        <div className="absolute left-20 top-44 h-24 w-4 rotate-12 rounded-full bg-zinc-100" />
+        <div className="absolute left-14 top-0 h-11 w-11 rounded-full bg-zinc-100 shadow-[0_0_40px_rgba(255,255,255,0.35)]" />
+        <div className="absolute left-12 top-10 h-28 w-16 rounded-t-full bg-red-700" />
+        <div className="absolute left-2 top-32 h-28 w-36 rounded-[60%_40%_65%_35%] bg-red-800 shadow-[0_0_60px_rgba(185,28,28,0.45)]" />
+        <div className="absolute left-2 top-28 h-5 w-32 rotate-[15deg] rounded-full bg-zinc-100" />
+        <div className="absolute left-16 top-54 h-30 w-4 -rotate-6 rounded-full bg-zinc-100" />
+        <div className="absolute left-25 top-52 h-36 w-4 rotate-[19deg] rounded-full bg-zinc-100" />
       </motion.div>
 
-      <div className="absolute bottom-8 left-8 right-8 rounded-2xl border border-white/10 bg-white/10 p-4 text-white backdrop-blur-md">
-        <p className="font-serif text-2xl">Tango with feeling.</p>
-        <p className="mt-1 text-sm text-white/70">green lead · red follow · black & white stage</p>
+      <div className="absolute bottom-8 left-8 right-8 rounded-[1.5rem] border border-white/10 bg-white/[0.06] p-5 backdrop-blur-xl">
+        <p className="text-xs uppercase tracking-[0.32em] text-red-200">Visual direction</p>
+        <p className="mt-2 font-serif text-3xl text-white">Man in green. Woman in red. Night around them.</p>
       </div>
     </div>
   );
 }
 
-export default function SteffitangoLandingPage() {
+function GlassCard({ children, className }) {
+  return <div className={cn("rounded-[1.7rem] border border-white/10 bg-white/[0.055] shadow-2xl shadow-black/20 backdrop-blur-xl", className)}>{children}</div>;
+}
+
+export default function SteffitangoLandingPage2026() {
   const [lang, setLang] = useState("de");
-  const t = copy[lang];
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const t = translations[lang];
 
   const navItems = useMemo(
     () => [
       ["#home", t.nav.home],
-      ["#courses", t.nav.courses],
       ["#events", t.nav.events],
-      ["#workshops", t.nav.workshops],
-      ["#private", t.nav.private],
+      ["#courses", t.nav.courses],
+      ["#prices", t.nav.prices],
+      ["#about", t.nav.about],
       ["#location", t.nav.location],
     ],
     [t]
   );
 
   return (
-    <main className="min-h-screen bg-[#fbfaf7] text-zinc-950">
-      <header className="sticky top-0 z-50 border-b border-zinc-200/80 bg-[#fbfaf7]/85 backdrop-blur-xl">
+    <main className="min-h-screen overflow-hidden bg-[#050505] text-white selection:bg-red-700 selection:text-white">
+      <div className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(circle_at_15%_10%,rgba(185,28,28,0.22),transparent_28%),radial-gradient(circle_at_85%_0%,rgba(255,255,255,0.08),transparent_24%),linear-gradient(180deg,#050505_0%,#0b0b0b_46%,#050505_100%)]" />
+      <div className="pointer-events-none fixed inset-0 z-0 opacity-[0.04] [background-image:linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] [background-size:48px_48px]" />
+
+      <header className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-black/55 backdrop-blur-2xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
-          <a href="#home" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-950 text-white">
-              <Heart className="h-4 w-4 fill-red-700 text-red-700" />
+          <a href="#home" className="group flex items-center gap-3">
+            <div className="relative flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/10">
+              <span className="absolute inset-1 rounded-full bg-red-700/20 blur-sm" />
+              <Heart className="relative h-4 w-4 fill-red-500 text-red-500" />
             </div>
             <div>
-              <p className="font-serif text-xl font-semibold leading-none">Steffitango</p>
-              <p className="text-xs uppercase tracking-[0.26em] text-red-700">Fürth</p>
+              <p className="font-serif text-xl font-semibold leading-none tracking-tight">{t.meta.brand}</p>
+              <p className="mt-1 text-[10px] uppercase tracking-[0.32em] text-red-200">{t.meta.location}</p>
             </div>
           </a>
 
-          <nav className="hidden items-center gap-6 text-sm font-medium text-zinc-700 lg:flex">
+          <nav className="hidden items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] p-1 lg:flex">
             {navItems.map(([href, label]) => (
-              <a key={href} href={href} className="transition hover:text-red-700">
+              <a key={href} href={href} className="rounded-full px-4 py-2 text-sm text-zinc-300 transition hover:bg-white/10 hover:text-white">
                 {label}
               </a>
             ))}
           </nav>
 
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              className="rounded-full border-zinc-300 bg-white"
+            <button
               onClick={() => setLang(lang === "de" ? "en" : "de")}
+              className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
             >
-              <Languages className="mr-2 h-4 w-4" /> {lang === "de" ? "EN" : "DE"}
-            </Button>
-            <Button className="hidden rounded-full bg-red-700 text-white hover:bg-red-800 sm:inline-flex">
-              <Mail className="mr-2 h-4 w-4" /> {t.nav.contact}
-            </Button>
+              <Languages className="h-4 w-4 text-red-200" /> {t.meta.langLabel}
+            </button>
+            <a href={`mailto:${CONTACT_EMAIL}`} className="hidden rounded-full bg-red-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-red-600 md:inline-flex">
+              {t.nav.contact}
+            </a>
+            <button onClick={() => setMobileOpen(!mobileOpen)} className="rounded-full border border-white/15 bg-white/[0.06] p-2 lg:hidden">
+              {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
           </div>
         </div>
+        {mobileOpen && (
+          <div className="border-t border-white/10 bg-black/90 px-5 py-4 lg:hidden">
+            <div className="grid gap-2">
+              {navItems.map(([href, label]) => (
+                <a key={href} href={href} onClick={() => setMobileOpen(false)} className="rounded-2xl bg-white/[0.06] px-4 py-3 text-zinc-200">
+                  {label}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
       </header>
 
-      <section id="home" className="relative overflow-hidden px-5 py-16 md:py-24">
-        <div className="absolute -left-32 top-24 h-72 w-72 rounded-full bg-red-700/10 blur-3xl" />
-        <div className="absolute -right-32 bottom-24 h-72 w-72 rounded-full bg-zinc-950/10 blur-3xl" />
-
-        <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1.08fr_0.92fr]">
-          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-2 text-sm shadow-sm">
-              <Music2 className="h-4 w-4 text-red-700" /> {t.heroKicker}
-            </div>
-            <h1 className="font-serif text-5xl font-semibold leading-[0.95] tracking-tight md:text-7xl">
-              {t.heroTitle}
+      <section id="home" className="relative z-10 px-5 pb-20 pt-32 md:pt-40">
+        <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1.04fr_0.96fr]">
+          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+            <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-red-300/20 bg-red-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-red-200">
+              <Music2 className="h-3.5 w-3.5" /> {t.hero.eyebrow}
+            </p>
+            <h1 className="max-w-5xl font-serif text-6xl font-semibold leading-[0.88] tracking-[-0.065em] text-white md:text-8xl lg:text-9xl">
+              {t.hero.title}
             </h1>
-            <p className="mt-7 max-w-2xl text-lg leading-8 text-zinc-650 md:text-xl">{t.heroText}</p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button asChild className="rounded-full bg-red-700 px-7 py-6 text-base text-white hover:bg-red-800">
-                <a href="#courses">{t.ctaCourses}<ArrowRight className="ml-2 h-4 w-4" /></a>
-              </Button>
-              <Button asChild variant="outline" className="rounded-full border-zinc-300 bg-white px-7 py-6 text-base">
-                <a href="mailto:st@steffitango.de"><Mail className="mr-2 h-4 w-4" />{t.ctaEmail}</a>
-              </Button>
-              <Button asChild variant="outline" className="rounded-full border-zinc-300 bg-white px-7 py-6 text-base">
-                <a href="https://www.facebook.com/" target="_blank" rel="noreferrer"><Facebook className="mr-2 h-4 w-4" />Facebook</a>
-              </Button>
+            <p className="mt-8 max-w-2xl text-lg leading-8 text-zinc-300 md:text-xl">{t.hero.text}</p>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <a href="#events" className="group inline-flex items-center justify-center rounded-full bg-red-700 px-7 py-4 font-semibold text-white transition hover:bg-red-600">
+                {t.hero.primary} <ArrowRight className="ml-2 h-4 w-4 transition group-hover:translate-x-1" />
+              </a>
+              <a href="#courses" className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/[0.06] px-7 py-4 font-semibold text-white transition hover:bg-white/10">
+                {t.hero.secondary}
+              </a>
             </div>
-            <div className="mt-10 border-l-4 border-red-700 pl-5">
-              <p className="font-serif text-2xl italic text-zinc-900">“{t.quote}”</p>
-              <p className="mt-2 text-sm uppercase tracking-[0.26em] text-zinc-500">— {t.quoteAuthor}</p>
+            <div className="mt-10 max-w-2xl border-l border-red-400/50 pl-6">
+              <p className="font-serif text-2xl italic leading-snug text-white/90">“{t.hero.quote}”</p>
+              <p className="mt-3 text-xs uppercase tracking-[0.32em] text-zinc-500">— {t.hero.quoteAuthor}</p>
             </div>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.15 }}>
-            <DancingCoupleIllustration />
+          <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.9, delay: 0.1 }}>
+            <TangoSilhouette />
           </motion.div>
         </div>
-      </section>
 
-      <section className="bg-zinc-950 px-5 py-12 text-white">
-        <div className="mx-auto grid max-w-7xl gap-6 md:grid-cols-3">
-          {[t.womanOwned, "Salon · Neo · Milonguero", "Kaiserstraße 177 · Fürth"].map((item) => (
-            <div key={item} className="rounded-3xl border border-white/10 bg-white/5 p-6 text-center">
-              <p className="text-sm uppercase tracking-[0.26em] text-red-300">{item}</p>
-            </div>
+        <div className="mx-auto mt-14 grid max-w-7xl gap-4 md:grid-cols-3">
+          {t.mood.map((item) => (
+            <GlassCard key={item} className="p-5">
+              <p className="text-sm uppercase tracking-[0.24em] text-zinc-300">{item}</p>
+            </GlassCard>
           ))}
         </div>
       </section>
 
-      <section className="px-5 py-20">
-        <div className="mx-auto max-w-5xl rounded-[2rem] border border-zinc-200 bg-white p-8 shadow-sm md:p-12">
-          <h2 className="font-serif text-4xl font-semibold md:text-5xl">{t.introTitle}</h2>
-          <p className="mt-6 text-lg leading-8 text-zinc-600">{t.introText}</p>
-        </div>
-      </section>
-
-      <section id="courses" className="px-5 py-20">
-        <SectionTitle eyebrow="Kurse / Courses" title={t.coursesTitle} text={t.coursesText} />
-        <div className="mx-auto mt-12 grid max-w-7xl gap-5 md:grid-cols-2 lg:grid-cols-4">
-          {courseData.map((day) => (
-            <Card key={day.dayKey} className="overflow-hidden rounded-[1.75rem] border-zinc-200 bg-white shadow-sm">
-              <CardContent className="p-0">
-                <div className="bg-zinc-950 p-5 text-white">
-                  <p className="font-serif text-3xl">{t[day.dayKey]}</p>
+      <section id="events" className="relative z-10 px-5 py-24">
+        <SectionHeader eyebrow={t.events.eyebrow} title={t.events.title} text={t.events.text} />
+        <div className="mx-auto mt-14 grid max-w-7xl gap-6 lg:grid-cols-3">
+          {t.events.cards.map((event, index) => (
+            <GlassCard key={event.name} className="group overflow-hidden p-7 transition hover:-translate-y-1 hover:bg-white/[0.075]">
+              <div className="mb-8 flex items-start justify-between">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-700/20 text-red-200">
+                  {index === 0 ? <Music2 className="h-5 w-5" /> : index === 1 ? <Sparkles className="h-5 w-5" /> : <Users className="h-5 w-5" />}
                 </div>
-                <div className="space-y-4 p-5">
-                  {day.items.map((item) => (
-                    <div key={item.title} className="rounded-2xl border border-zinc-200 bg-[#fbfaf7] p-4">
-                      <p className="text-sm font-semibold text-red-700">{item.time}</p>
-                      <h3 className="mt-1 font-serif text-xl font-semibold">{item.title}</h3>
-                      <p className="mt-2 text-sm text-zinc-600">{item.level}</p>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                <span className="rounded-full border border-white/10 px-3 py-1 text-xs uppercase tracking-[0.22em] text-zinc-400">2026</span>
+              </div>
+              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-red-200">{event.tag}</p>
+              <h3 className="mt-3 font-serif text-4xl font-semibold tracking-[-0.04em] text-white">{event.name}</h3>
+              <p className="mt-5 text-sm font-semibold text-white">{event.time}</p>
+              <p className="mt-2 text-sm text-red-100/80">{event.price}</p>
+              <p className="mt-5 leading-7 text-zinc-300">{event.text}</p>
+            </GlassCard>
           ))}
         </div>
-      </section>
 
-      <section id="events" className="bg-white px-5 py-20">
-        <SectionTitle eyebrow="Milonga · Practica" title={t.eventsTitle} text={t.eventsText} />
-        <div className="mx-auto mt-12 grid max-w-7xl gap-6 lg:grid-cols-3">
-          <Card className="rounded-[1.75rem] border-zinc-200 shadow-sm">
-            <CardContent className="p-7">
-              <CalendarDays className="h-8 w-8 text-red-700" />
-              <h3 className="mt-5 font-serif text-3xl font-semibold">Milonga “Volverás”</h3>
-              <p className="mt-3 text-zinc-600">20:00–ca. Mitternacht · 12 € / Studierende 5 €</p>
-              <div className="mt-5 flex flex-wrap gap-2">
-                {volverasDates.map((d) => <span key={d} className="rounded-full bg-red-700/10 px-3 py-1 text-sm text-red-800">Fr {d}</span>)}
-              </div>
-            </CardContent>
-          </Card>
+        <div className="mx-auto mt-8 grid max-w-7xl gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+          <GlassCard className="p-7">
+            <div className="flex items-center gap-3">
+              <CalendarDays className="h-5 w-5 text-red-200" />
+              <h3 className="font-serif text-3xl font-semibold">{t.events.volveras}</h3>
+            </div>
+            <div className="mt-6 flex flex-wrap gap-2">
+              {volverasDates.map((date) => (
+                <span key={date} className="rounded-full bg-red-700/15 px-3 py-1.5 text-sm text-red-100 ring-1 ring-red-300/10">Fr {date}</span>
+              ))}
+            </div>
+          </GlassCard>
 
-          <Card className="rounded-[1.75rem] border-zinc-200 shadow-sm">
-            <CardContent className="p-7">
-              <Sparkles className="h-8 w-8 text-red-700" />
-              <h3 className="mt-5 font-serif text-3xl font-semibold">Milonga “Cosa Nuestra”</h3>
-              <p className="mt-3 text-zinc-600">Modern orchestras · Neotango · Freestyle · community mix</p>
-              <div className="mt-6 rounded-2xl bg-zinc-950 p-5 text-white">
-                <p className="text-sm uppercase tracking-[0.24em] text-red-300">Mood</p>
-                <p className="mt-2 font-serif text-2xl">A different music mix — ganz unser Ding.</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="rounded-[1.75rem] border-zinc-200 shadow-sm">
-            <CardContent className="p-7">
-              <Users className="h-8 w-8 text-red-700" />
-              <h3 className="mt-5 font-serif text-3xl font-semibold">Practica “La Lúdica”</h3>
-              <p className="mt-3 text-zinc-600">16:00–19:00 · open training · playful practice</p>
-              <div className="mt-5 flex flex-wrap gap-2">
-                {ludicaDates.map((d) => <span key={d} className="rounded-full bg-zinc-100 px-3 py-1 text-sm text-zinc-800">So {d}</span>)}
-              </div>
-            </CardContent>
-          </Card>
+          <GlassCard className="p-7">
+            <div className="flex items-center gap-3">
+              <CalendarDays className="h-5 w-5 text-red-200" />
+              <h3 className="font-serif text-3xl font-semibold">{t.events.ludica}</h3>
+            </div>
+            <div className="mt-6 flex flex-wrap gap-2">
+              {ludicaDates.map((date) => (
+                <span key={date} className="rounded-full bg-white/[0.07] px-3 py-1.5 text-sm text-zinc-200 ring-1 ring-white/10">So {date}</span>
+              ))}
+            </div>
+          </GlassCard>
         </div>
-      </section>
 
-      <section id="workshops" className="px-5 py-20">
-        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-          <div>
-            <SectionTitle eyebrow="Festival" title={t.workshopsTitle} text={t.workshopsText} />
+        <div className="mx-auto mt-8 max-w-7xl overflow-hidden rounded-[2rem] border border-red-300/20 bg-gradient-to-br from-red-950/70 via-zinc-950 to-black p-8 shadow-2xl md:p-10">
+          <div className="grid items-center gap-8 lg:grid-cols-[0.78fr_1.22fr]">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-red-200">{t.events.festival.date}</p>
+              <h3 className="mt-4 font-serif text-5xl font-semibold tracking-[-0.05em] text-white">{t.events.festival.title}</h3>
+            </div>
+            <div>
+              <p className="text-lg leading-8 text-zinc-200">{t.events.festival.text}</p>
+              <a href="#contact" className="mt-6 inline-flex items-center rounded-full bg-white px-6 py-3 font-semibold text-black transition hover:bg-zinc-200">
+                {t.events.festival.button} <ChevronRight className="ml-2 h-4 w-4" />
+              </a>
+            </div>
           </div>
-          <div className="grid gap-5 md:grid-cols-2">
-            {[
-              ["17 Apr", "Practica + Auftakt Milonga", "Grüner Baum"],
-              ["18 Apr", "Workshops + TangoCafe + Gala", "Kulturforum / Lawrays"],
-              ["19 Apr", "Workshops + Abschluss Milonga", "Steffitango"],
-              ["Maestr@s", "Sara & Ivan · Lucila & Joe", "English teaching language"],
-            ].map(([date, title, place]) => (
-              <Card key={title} className="rounded-[1.75rem] border-zinc-200 bg-white shadow-sm">
-                <CardContent className="p-6">
-                  <p className="text-sm font-semibold uppercase tracking-[0.22em] text-red-700">{date}</p>
-                  <h3 className="mt-3 font-serif text-2xl font-semibold">{title}</h3>
-                  <p className="mt-2 text-zinc-600">{place}</p>
-                </CardContent>
-              </Card>
+        </div>
+      </section>
+
+      <section id="courses" className="relative z-10 px-5 py-24">
+        <SectionHeader eyebrow={t.courses.eyebrow} title={t.courses.title} text={t.courses.text} />
+        <div className="mx-auto mt-8 max-w-3xl rounded-full border border-white/10 bg-white/[0.05] px-5 py-3 text-center text-sm text-red-100">
+          {t.courses.priceNote}
+        </div>
+        <div className="mx-auto mt-12 grid max-w-7xl gap-5 md:grid-cols-2 xl:grid-cols-4">
+          {t.courseCards.map((day) => (
+            <GlassCard key={day.day} className="overflow-hidden">
+              <div className="border-b border-white/10 bg-white/[0.04] p-6">
+                <h3 className="font-serif text-4xl font-semibold tracking-[-0.04em]">{day.day}</h3>
+              </div>
+              <div className="space-y-4 p-5">
+                {day.items.map(([time, title, desc]) => (
+                  <div key={title} className="rounded-[1.25rem] border border-white/10 bg-black/25 p-4">
+                    <p className="text-sm font-semibold text-red-200">{time}</p>
+                    <h4 className="mt-2 font-serif text-2xl font-semibold text-white">{title}</h4>
+                    <p className="mt-2 text-sm leading-6 text-zinc-400">{desc}</p>
+                  </div>
+                ))}
+              </div>
+            </GlassCard>
+          ))}
+        </div>
+      </section>
+
+      <section id="prices" className="relative z-10 px-5 py-24">
+        <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.85fr_1.15fr]">
+          <SectionHeader align="left" eyebrow={t.prices.eyebrow} title={t.prices.title} text={t.prices.text} />
+          <GlassCard className="overflow-hidden">
+            {t.prices.rows.map(([name, price, note], index) => (
+              <div key={name} className={cn("grid gap-4 p-6 md:grid-cols-[1fr_0.35fr_1fr]", index !== 0 && "border-t border-white/10")}>
+                <p className="font-serif text-2xl text-white">{name}</p>
+                <p className="text-xl font-semibold text-red-200">{price}</p>
+                <p className="text-zinc-400">{note}</p>
+              </div>
             ))}
-          </div>
+          </GlassCard>
         </div>
       </section>
 
-      <section id="private" className="bg-zinc-950 px-5 py-20 text-white">
-        <div className="mx-auto grid max-w-7xl items-center gap-10 md:grid-cols-2">
+      <section id="about" className="relative z-10 px-5 py-24">
+        <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
           <div>
-            <div className="mb-4 inline-flex rounded-full bg-red-700/20 px-4 py-2 text-sm font-semibold uppercase tracking-[0.25em] text-red-200">
-              1:1 Coaching
+            <SectionHeader align="left" eyebrow={t.about.eyebrow} title={t.about.title} text={t.about.text} />
+            <p className="mt-7 font-serif text-3xl text-red-100">{t.about.team}</p>
+            <div className="mt-6 flex flex-wrap gap-2">
+              {t.about.values.map((value) => (
+                <span key={value} className="rounded-full border border-white/10 bg-white/[0.06] px-4 py-2 text-sm text-zinc-300">{value}</span>
+              ))}
             </div>
-            <h2 className="font-serif text-4xl font-semibold md:text-5xl">{t.privateTitle}</h2>
-            <p className="mt-6 text-lg leading-8 text-white/70">{t.privateText}</p>
           </div>
-          <Card className="rounded-[2rem] border-white/10 bg-white/10 text-white backdrop-blur">
-            <CardContent className="p-8">
-              <GraduationCap className="h-9 w-9 text-red-300" />
-              <p className="mt-5 font-serif text-3xl">Technique, musicality, embrace, role clarity.</p>
-              <Button asChild className="mt-7 rounded-full bg-red-700 text-white hover:bg-red-800">
-                <a href="mailto:st@steffitango.de">st@steffitango.de</a>
-              </Button>
-            </CardContent>
-          </Card>
+          <GlassCard className="relative overflow-hidden p-8">
+            <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-red-700/20 blur-3xl" />
+            <UserRoundHeart className="relative h-12 w-12 text-red-200" />
+            <h3 className="relative mt-8 font-serif text-5xl font-semibold tracking-[-0.05em]">Tango as a conversation.</h3>
+            <p className="relative mt-5 leading-8 text-zinc-300">
+              A premium but human brand direction: less clutter, more atmosphere, clear action, emotional storytelling and community warmth.
+            </p>
+          </GlassCard>
         </div>
       </section>
 
-      <section id="location" className="px-5 py-20">
-        <div className="mx-auto grid max-w-7xl overflow-hidden rounded-[2rem] border border-zinc-200 bg-white shadow-sm lg:grid-cols-2">
+      <section id="location" className="relative z-10 px-5 py-24">
+        <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.25rem] border border-white/10 bg-white/[0.055] shadow-2xl shadow-black/30 backdrop-blur-xl lg:grid lg:grid-cols-[0.85fr_1.15fr]">
           <div className="p-8 md:p-12">
-            <MapPin className="h-9 w-9 text-red-700" />
-            <h2 className="mt-5 font-serif text-4xl font-semibold md:text-5xl">{t.locationTitle}</h2>
-            <p className="mt-5 text-lg leading-8 text-zinc-600">{t.locationText}</p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild className="rounded-full bg-zinc-950 text-white hover:bg-zinc-800">
-                <a href="https://maps.google.com/?q=Kaiserstraße+177,+90763+Fürth" target="_blank" rel="noreferrer"><MapPin className="mr-2 h-4 w-4" />Google Maps</a>
-              </Button>
-              <Button asChild variant="outline" className="rounded-full bg-white">
-                <a href="#home"><Home className="mr-2 h-4 w-4" />{t.nav.home}</a>
-              </Button>
+            <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-red-300/20 bg-red-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-red-200">
+              <MapPin className="h-3.5 w-3.5" /> {t.location.eyebrow}
+            </p>
+            <h2 className="font-serif text-5xl font-semibold leading-tight tracking-[-0.05em] text-white">{t.location.title}</h2>
+            <p className="mt-6 text-lg leading-8 text-zinc-300">{t.location.text}</p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a href={GOOGLE_MAPS_URL} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-full bg-red-700 px-6 py-3 font-semibold text-white transition hover:bg-red-600">
+                <MapPin className="mr-2 h-4 w-4" /> {t.location.maps}
+              </a>
+              <a href="#home" className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/[0.06] px-6 py-3 font-semibold text-white transition hover:bg-white/10">
+                <Home className="mr-2 h-4 w-4" /> {t.nav.home}
+              </a>
             </div>
           </div>
-          <div className="min-h-[340px] bg-[linear-gradient(135deg,#111_0%,#111_45%,#7f1d1d_45%,#7f1d1d_58%,#f8fafc_58%,#f8fafc_100%)] p-8 text-white">
-            <div className="flex h-full flex-col justify-end rounded-[1.5rem] border border-white/20 bg-black/20 p-6 backdrop-blur-sm">
-              <Ticket className="h-8 w-8 text-red-200" />
-              <p className="mt-4 font-serif text-3xl">Schwingbodenparkett. Innenhof. Libellen. Tango.</p>
+          <div className="min-h-[420px] bg-[linear-gradient(135deg,#090909_0%,#090909_42%,#7f1d1d_42%,#7f1d1d_58%,#e8e1d7_58%,#ffffff_100%)] p-8">
+            <div className="flex h-full flex-col justify-end rounded-[1.75rem] border border-black/10 bg-black/20 p-7 text-white backdrop-blur-sm">
+              <Gem className="h-9 w-9 text-red-100" />
+              <p className="mt-5 max-w-md font-serif text-4xl leading-tight">A courtyard entrance, a warm floor, and the feeling that the evening has just begun.</p>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="contact" className="px-5 pb-20">
-        <div className="mx-auto max-w-5xl rounded-[2rem] bg-red-700 p-8 text-center text-white shadow-xl md:p-12">
-          <h2 className="font-serif text-4xl font-semibold md:text-5xl">{t.contactTitle}</h2>
-          <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-white/80">{t.contactText}</p>
-          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <Button asChild className="rounded-full bg-white px-7 py-6 text-zinc-950 hover:bg-zinc-100">
-              <a href="mailto:st@steffitango.de"><Mail className="mr-2 h-4 w-4" />{t.ctaEmail}</a>
-            </Button>
-            <Button asChild variant="outline" className="rounded-full border-white/40 bg-transparent px-7 py-6 text-white hover:bg-white/10">
-              <a href="https://www.facebook.com/" target="_blank" rel="noreferrer"><Facebook className="mr-2 h-4 w-4" />{t.ctaFacebook}</a>
-            </Button>
+      <section id="contact" className="relative z-10 px-5 py-24">
+        <div className="mx-auto max-w-5xl rounded-[2.25rem] border border-red-300/20 bg-gradient-to-br from-red-800 via-red-950 to-black p-8 text-center shadow-[0_40px_120px_rgba(127,29,29,0.25)] md:p-14">
+          <Ticket className="mx-auto h-10 w-10 text-red-100" />
+          <h2 className="mt-6 font-serif text-5xl font-semibold leading-tight tracking-[-0.05em] text-white md:text-7xl">{t.contact.title}</h2>
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-red-50/80">{t.contact.text}</p>
+          <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
+            <a href={`mailto:${CONTACT_EMAIL}`} className="inline-flex items-center justify-center rounded-full bg-white px-7 py-4 font-semibold text-black transition hover:bg-zinc-200">
+              <Mail className="mr-2 h-4 w-4" /> {t.contact.email}
+            </a>
+            <a href={FACEBOOK_URL} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-7 py-4 font-semibold text-white transition hover:bg-white/15">
+              <Facebook className="mr-2 h-4 w-4" /> {t.contact.facebook}
+            </a>
           </div>
         </div>
       </section>
 
-      <footer className="border-t border-zinc-200 px-5 py-8 text-center text-sm text-zinc-500">
-        <p>{t.footer}</p>
+      <footer className="relative z-10 border-t border-white/10 px-5 py-8 text-center text-sm text-zinc-500">
+        <p>© 2026 Steffitango · Kaiserstraße 177 · 90763 Fürth · {CONTACT_EMAIL}</p>
       </footer>
     </main>
   );
